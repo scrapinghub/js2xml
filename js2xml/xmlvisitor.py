@@ -41,7 +41,7 @@ class XmlVisitor(object):
 
     def visit_VarDecl(self, node):
         var_decl = E.var_decl()
-        var_decl.append(E.identifider(self.visit(node.identifier)))
+        var_decl.append(self.visit(node.identifier))
         if node.initializer is not None:
             var_decl.append(E.initializer(self.visit(node.initializer)))
         return var_decl
@@ -166,8 +166,13 @@ class XmlVisitor(object):
             unary.append(E.operation(node.op))
             unary.append(self.visit(node.value))
         else:
-            unary.append(E.operation(node.op))
-            unary.append(self.visit(node.value))
+            # convert things like "+3.14" and "-22"
+            if node.op in ("-", "+") and isinstance(node.value, ast.Number):
+                node.value.value = "%s%s" % (node.op, node.value.value)
+                return self.visit(node.value)
+            else:
+                unary.append(E.operation(node.op))
+                unary.append(self.visit(node.value))
         return unary
 
     def visit_ExprStatement(self, node):
