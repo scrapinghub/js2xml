@@ -7,7 +7,6 @@ Example:
 
 ```python
 >>> import js2xml
->>> import lxml.etree
 >>>
 >>> jscode = """function factorial(n) {
 ...     if (n === 0) {
@@ -15,12 +14,9 @@ Example:
 ...     }
 ...     return n * factorial(n - 1);
 ... }"""
->>> jsxml = js2xml.parse(jscode)
+>>> parsed = js2xml.parse(jscode)
 >>>
->>> print jsxml
-<Element program at 0x7fb3f7280050>
-
->>> print lxml.etree.tostring(jsxml, pretty_print=True)
+>>> print js2xml.pretty_print(parsed)
 <program>
   <funcdecl>
     <identifier>factorial</identifier>
@@ -78,6 +74,7 @@ Example:
   </funcdecl>
 </program>
 
->>> 
+>>>
+
 
 ```
