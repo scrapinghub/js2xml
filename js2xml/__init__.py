@@ -1,5 +1,6 @@
 import lxml.etree
-from slimit.parser import Parser
+#from slimit.parser import Parser
+from js2xml.parser import CustomParser as Parser
 from js2xml.xmlvisitor import XmlVisitor
 
 _parser = Parser()

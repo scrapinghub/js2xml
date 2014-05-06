@@ -4,21 +4,8 @@ from lxml.builder import E
 import lxml.etree as ET
 
 
-_re_sglquotes = re.compile(r"""^'(?P<inner>.*)'$""")
-_re_dblquotes = re.compile(r"""^"(?P<inner>.*)"$""")
-
 def unescape_string(input_string):
     return input_string.replace(r'\/', '/')
-
-def clean_string(input_string):
-    sglm = _re_sglquotes.match(input_string)
-    if sglm:
-        input_string = sglm.group("inner").replace(r"\'", r"'")
-    else:
-        dblm = _re_dblquotes.match(input_string)
-        if dblm:
-            input_string = dblm.group("inner").replace(r'\"', r'"')
-    return unescape_string(input_string)
 
 
 class XmlVisitor(object):
@@ -221,7 +208,7 @@ class XmlVisitor(object):
         return node
 
     def visit_String(self, node):
-        return E.string(clean_string(node.value))
+        return E.string(unescape_string(eval("u"+node.value.decode("utf8"))))
 
     def visit_Continue(self, node):
         continueel = ET.Element("continue")

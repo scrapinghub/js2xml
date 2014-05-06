@@ -48,28 +48,54 @@ def test_parse_string():
     jscode_snippets = [
         (
         r"""
-        var i = 'test';
-        """, [r'test']
+        var h = 'test';
+        var i = "test";
+        var j = "";
+        var k = '""';
+        var l = '"';
+        var m = '';
+        var n = "''";
+        var o = "'";
+        """, ['test', 'test', '', '""', '"', '', "''", "'"]
         ),
         (
         r"""
         var i = 'test\'s output';
         """, [r"test's output"]
         ),
+
         (
         r"""
-        var i = "test";
-        """, [r'test']
+        var i = ["\"", '\''];
+        var j = "test\'s output";
+        var k = "test\\'s output";
+        var l = "nested \"quotes\".";
+        """, ['"', "'", r"test's output", r"test\'s output", r'nested "quotes".']
         ),
         (
         r"""
-        var i = "test\'s output";
-        """, [r"test\'s output"]
+        var i = 'https://www.blogger.com/navbar.g?targetBlogID\0754325487278375417853\46blogName\75spirello\46publishMode\75PUBLISH_MODE_BLOGSPOT\46navbarType\75LIGHT\46layoutType\75LAYOUTS\46searchRoot\75http://spirelloskrimskramserier.blogspot.com/search\46blogLocale\75no\46v\0752\46homepageUrl\75http://spirelloskrimskramserier.blogspot.com/\46vt\0751357383140196484672';
+        """, [r'https://www.blogger.com/navbar.g?targetBlogID=4325487278375417853&blogName=spirello&publishMode=PUBLISH_MODE_BLOGSPOT&navbarType=LIGHT&layoutType=LAYOUTS&searchRoot=http://spirelloskrimskramserier.blogspot.com/search&blogLocale=no&v=2&homepageUrl=http://spirelloskrimskramserier.blogspot.com/&vt=1357383140196484672']
         ),
         (
         r"""
-        var i = "nested \"quotes\".";
-        """, [r'nested "quotes".']
+        var i = "foo \
+bar";
+        var j = "foo \
+                 bar";
+        """, [r'foo bar', 'foo                  bar']
+        ),
+        (
+        r"""
+        var x = "\u00A9 Netscape Communications";
+        """,
+        [ur'\u00a9 Netscape Communications']
+        ),
+        (
+        u"""
+        var x = "\u00A9 Netscape Communications";
+        """.encode("utf8"),
+        [u'\u00a9 Netscape Communications']
         ),
     ]
 

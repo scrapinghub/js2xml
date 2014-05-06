@@ -1,7 +1,5 @@
 import sys
-import lxml.etree
-from slimit.parser import Parser
-from js2xml.xmlvisitor import XmlVisitor
+import js2xml
 
 text = sys.stdin.read()
 if not text:
@@ -14,9 +12,5 @@ if not text:
     };
     """
 print text
-parser = Parser()
-tree = parser.parse(text, debug=False)
-
-visitor = XmlVisitor()
-xml = visitor.visit(tree)
-print lxml.etree.tostring(xml, pretty_print=True)
+tree = js2xml.parse(text, debug=False)
+print js2xml.pretty_print(tree)
