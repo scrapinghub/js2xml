@@ -1,6 +1,8 @@
 js2xml
 ======
 
+[![Build Status](https://travis-ci.org/redapple/js2xml.png?branch=master)](https://travis-ci.org/redapple/js2xml)
+
 Convert Javascript code to an XML document
 
 Example:
