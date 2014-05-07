@@ -1,3 +1,4 @@
+import ast as pyast
 import re
 from slimit import ast
 from lxml.builder import E
@@ -208,7 +209,7 @@ class XmlVisitor(object):
         return node
 
     def visit_String(self, node):
-        return E.string(unescape_string(eval("u"+node.value.decode("utf8"))))
+        return E.string(unescape_string(pyast.literal_eval("u"+node.value.decode("utf8"))))
 
     def visit_Continue(self, node):
         continueel = ET.Element("continue")
