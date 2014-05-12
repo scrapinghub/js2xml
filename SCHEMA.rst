@@ -70,9 +70,6 @@ becomes
 
 
 
-js2xml XML schema by example
-============================
-
 Primitive types
 ---------------
 
