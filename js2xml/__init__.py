@@ -16,37 +16,38 @@ def pretty_print(tree):
     return lxml.etree.tostring(tree, pretty_print=True)
 
 
+_jsonlike_elements = """
+       self::object
+    or self::array
+    or self::assign
+    or self::left
+    or self::right
+    or self::operator[.=":"]
+    or self::string
+    or self::number
+    or self::boolean
+    """
 _jsonlike_xpath = """
     (self::object or self::array)
     and
-    count(./descendant-or-self::*[not(   self::object
-                                      or self::array
-                                      or self::assign
-                                      or self::left
-                                      or self::right
-                                      or self::operator[.=":"]
-                                      or self::string
-                                      or self::number
-                                      or self::boolean)])=0
-"""
+    not(./descendant::*[not(%(elements)s)])
+""" % {"elements": _jsonlike_elements}
+
 _xp_jsonlike = lxml.etree.XPath(_jsonlike_xpath)
+_topjsonlike_xpath = """
+    .//*[self::object or self::array]
+        [not(./descendant::*[not(%(elements)s)])]
+        [not(ancestor::*[%(jsonlike)s])]
+""" % {"elements": _jsonlike_elements,
+       "jsonlike": _jsonlike_xpath}
+_xp_findjsonlike = lxml.etree.XPath(_topjsonlike_xpath)
+
+
 def is_jsonlike(subtree):
     return _xp_jsonlike(subtree)
 
-_findjson_xpath = """
-    .//*[self::object or self::array]
-        [count(.//*[not(   self::object
-                        or self::array
-                        or self::assign
-                        or self::left
-                        or self::right
-                        or self::operator[.=":"]
-                        or self::string
-                        or self::number
-                        or self::boolean)])=0]
-"""
-_xp_findjsonlike = lxml.etree.XPath(_findjson_xpath)
-def find_jsonlike(tree):
+
+def findall_jsonlike(tree):
     return _xp_findjsonlike(tree)
 
 
