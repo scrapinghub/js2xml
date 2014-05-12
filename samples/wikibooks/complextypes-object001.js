@@ -1,0 +1,1 @@
+var myObject = new Object();
