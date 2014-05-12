@@ -113,7 +113,9 @@ class XmlVisitor(object):
             ifel.append(E.predicate(self.visit(node.predicate)))
         ifel.append(E.then(self.visit(node.consequent)))
         if node.alternative is not None:
-            ifel.append(ET.Element("else", self.visit(node.alternative)))
+            elseel = ET.Element("else")
+            elseel.append(self.visit(node.alternative))
+            ifel.append(elseel)
         return ifel
 
     def visit_Boolean(self, node):
