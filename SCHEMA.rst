@@ -1,6 +1,8 @@
 js2xml XML schema by example
 ============================
 
+All examples are taken from https://en.wikibooks.org/wiki/JavaScript/Variables_and_Types
+
 Variable declaration
 --------------------
 
@@ -160,3 +162,171 @@ becomes
       </initializer>
     </var_decl>
   </var>
+
+
+Complex types
+-------------
+
+Array Type
+**********
+
+Using the statement new followed by ``Array``:
+
+.. code:: javascript
+
+    var myArray = new Array(0, 2, 4);
+    var myOtherArray = new Array();
+
+becomes
+
+.. code:: xml
+
+  <var>
+    <var_decl>
+      <identifier>myArray</identifier>
+      <initializer>
+        <new>
+          <identifier>Array</identifier>
+          <arguments>
+            <number>0</number>
+            <number>2</number>
+            <number>4</number>
+          </arguments>
+        </new>
+      </initializer>
+    </var_decl>
+  </var>
+  <var>
+    <var_decl>
+      <identifier>myOtherArray</identifier>
+      <initializer>
+        <new>
+          <identifier>Array</identifier>
+          <arguments/>
+        </new>
+      </initializer>
+    </var_decl>
+  </var>
+
+
+Arrays can also be created with the array notation, which uses square brackets:
+
+.. code:: javascript
+
+    var myArray = [0, 2, 4];
+    var myOtherArray = [];
+
+becomes
+
+.. code:: xml
+
+  <var>
+    <var_decl>
+      <identifier>myArray</identifier>
+      <initializer>
+        <array>
+          <number>0</number>
+          <number>2</number>
+          <number>4</number>
+        </array>
+      </initializer>
+    </var_decl>
+  </var>
+  <var>
+    <var_decl>
+      <identifier>myOtherArray</identifier>
+      <initializer>
+        <array/>
+      </initializer>
+    </var_decl>
+  </var>
+
+
+Arrays are accessed using the square brackets:
+
+.. code:: javascript
+
+    myArray[2] = "Hello";
+    var text = myArray[2];
+
+becomes
+
+.. code:: xml
+
+  <assign>
+    <left>
+      <bracketaccessor>
+        <object>
+          <identifier>myArray</identifier>
+        </object>
+        <property>
+          <number>2</number>
+        </property>
+      </bracketaccessor>
+    </left>
+    <operator>=</operator>
+    <right>
+      <string>Hello</string>
+    </right>
+  </assign>
+  <var>
+    <var_decl>
+      <identifier>text</identifier>
+      <initializer>
+        <bracketaccessor>
+          <object>
+            <identifier>myArray</identifier>
+          </object>
+          <property>
+            <number>2</number>
+          </property>
+        </bracketaccessor>
+      </initializer>
+    </var_decl>
+  </var>
+
+
+Object Types
+************
+
+Using the ``new`` operator:
+
+.. code:: javascript
+
+    var myObject = new Object();
+
+becomes
+
+.. code:: xml
+
+  <var>
+    <var_decl>
+      <identifier>myObject</identifier>
+      <initializer>
+        <new>
+          <identifier>Object</identifier>
+          <arguments/>
+        </new>
+      </initializer>
+    </var_decl>
+  </var>
+
+Using curly braces notation:
+
+.. code:: javascript
+
+    var myObject = {};
+
+becomes
+
+.. code:: xml
+
+  <var>
+    <var_decl>
+      <identifier>myObject</identifier>
+      <initializer>
+        <object/>
+      </initializer>
+    </var_decl>
+  </var>
+
