@@ -44,35 +44,6 @@ becomes
       </var>
 
 
-String type
-***********
-
-.. code:: javascript
-
-    var myName = "Some Name";
-    var myChar = 'f';
-
-becomes
-
-.. code:: xml
-
-  <var>
-    <var_decl>
-      <identifier>myName</identifier>
-      <initializer>
-        <string>Some Name</string>
-      </initializer>
-    </var_decl>
-  </var>
-  <var>
-    <var_decl>
-      <identifier>myChar</identifier>
-      <initializer>
-        <string>f</string>
-      </initializer>
-    </var_decl>
-  </var>
-
 Assigning a value
 *****************
 
@@ -156,6 +127,36 @@ becomes
       <identifier>pal</identifier>
       <initializer>
         <number>12.1</number>
+      </initializer>
+    </var_decl>
+  </var>
+
+
+String type
+***********
+
+.. code:: javascript
+
+    var myName = "Some Name";
+    var myChar = 'f';
+
+becomes
+
+.. code:: xml
+
+  <var>
+    <var_decl>
+      <identifier>myName</identifier>
+      <initializer>
+        <string>Some Name</string>
+      </initializer>
+    </var_decl>
+  </var>
+  <var>
+    <var_decl>
+      <identifier>myChar</identifier>
+      <initializer>
+        <string>f</string>
       </initializer>
     </var_decl>
   </var>
