@@ -12,7 +12,7 @@ Explicit declaration
 .. code:: javascript
 
     var c;
-  
+
 becomes
 
 .. code:: xml
@@ -30,7 +30,7 @@ Initialized declaration
 .. code:: javascript
 
     var c = 0;
-  
+
 becomes
 
 .. code:: xml
@@ -81,7 +81,7 @@ Boolean type
 
     var mayday = false;
     var birthday = true;
-  
+
 becomes
 
 .. code:: xml
@@ -330,3 +330,193 @@ becomes
     </var_decl>
   </var>
 
+
+Functions
+---------
+
+Function declaration
+********************
+
+.. code:: javascript
+
+    function hello() {
+      alert("Hello, World!");
+    }
+
+becomes
+
+.. code:: xml
+
+  <funcdecl>
+    <identifier>hello</identifier>
+    <parameters/>
+    <body>
+      <functioncall>
+        <identifier>
+          <identifier>alert</identifier>
+        </identifier>
+        <arguments>
+          <string>Hello, World!</string>
+        </arguments>
+      </functioncall>
+    </body>
+  </funcdecl>
+
+
+
+With arguments
+**************
+
+.. code:: javascript
+
+    function hello(who) {
+      alert("Hello, " + who + "!");
+    }
+
+becomes
+
+.. code:: xml
+
+  <funcdecl>
+    <identifier>hello</identifier>
+    <parameters>
+      <identifier>who</identifier>
+    </parameters>
+    <body>
+      <functioncall>
+        <identifier>
+          <identifier>alert</identifier>
+        </identifier>
+        <arguments>
+          <binaryoperation>
+            <left>
+              <binaryoperation>
+                <left>
+                  <string>Hello, </string>
+                </left>
+                <operator>+</operator>
+                <right>
+                  <identifier>who</identifier>
+                </right>
+              </binaryoperation>
+            </left>
+            <operator>+</operator>
+            <right>
+              <string>!</string>
+            </right>
+          </binaryoperation>
+        </arguments>
+      </functioncall>
+    </body>
+  </funcdecl>
+
+
+Function expression
+*******************
+
+Anonymous:
+
+.. code:: javascript
+
+    var square = function(number) {return number * number};
+
+becomes
+
+.. code:: xml
+
+  <var>
+    <var_decl>
+      <identifier>square</identifier>
+      <initializer>
+        <funcexpr>
+          <identifier/>
+          <parameters>
+            <identifier>number</identifier>
+          </parameters>
+          <body>
+            <return>
+              <binaryoperation>
+                <left>
+                  <identifier>number</identifier>
+                </left>
+                <operator>*</operator>
+                <right>
+                  <identifier>number</identifier>
+                </right>
+              </binaryoperation>
+            </return>
+          </body>
+        </funcexpr>
+      </initializer>
+    </var_decl>
+  </var>
+
+Named function expression:
+
+.. code:: javascript
+
+    var factorial = function fac(n) {return n<2 ? 1 : n*fac(n-1)};
+
+becomes
+
+.. code:: xml
+
+  <var>
+    <var_decl>
+      <identifier>factorial</identifier>
+      <initializer>
+        <funcexpr>
+          <identifier>fac</identifier>
+          <parameters>
+            <identifier>n</identifier>
+          </parameters>
+          <body>
+            <return>
+              <conditional>
+                <condition>
+                  <binaryoperation>
+                    <left>
+                      <identifier>n</identifier>
+                    </left>
+                    <operator>&lt;</operator>
+                    <right>
+                      <number>2</number>
+                    </right>
+                  </binaryoperation>
+                </condition>
+                <value1>
+                  <number>1</number>
+                </value1>
+                <value2>
+                  <binaryoperation>
+                    <left>
+                      <identifier>n</identifier>
+                    </left>
+                    <operator>*</operator>
+                    <right>
+                      <functioncall>
+                        <identifier>
+                          <identifier>fac</identifier>
+                        </identifier>
+                        <arguments>
+                          <binaryoperation>
+                            <left>
+                              <identifier>n</identifier>
+                            </left>
+                            <operator>-</operator>
+                            <right>
+                              <number>1</number>
+                            </right>
+                          </binaryoperation>
+                        </arguments>
+                      </functioncall>
+                    </right>
+                  </binaryoperation>
+                </value2>
+              </conditional>
+            </return>
+          </body>
+        </funcexpr>
+      </initializer>
+    </var_decl>
+  </var>
