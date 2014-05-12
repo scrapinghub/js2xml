@@ -4,6 +4,9 @@ js2xml XML schema by example
 Variable declaration
 --------------------
 
+Explicit decleration
+********************
+
 .. code:: javascript
 
     var c;
@@ -20,6 +23,9 @@ becomes
       </var>
     </program>
 
+
+Initialized declaration
+***********************
 
 .. code:: javascript
 
@@ -40,11 +46,16 @@ becomes
       </var>
     </program>
 
+
+Assigning a value
+*****************
+
 .. code:: javascript
 
     c = 1;
 
 becomes
+
 
 .. code:: xml
 
