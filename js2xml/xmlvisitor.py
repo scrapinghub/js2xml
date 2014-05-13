@@ -368,7 +368,7 @@ class XmlVisitor(object):
         length = len(node.items) - 1
         for index, item in enumerate(node.items):
             if isinstance(item, ast.Elision):
-                pass
+                array.append(E.undefined())
             else:
                 array.append(self.visit(item))
         return array

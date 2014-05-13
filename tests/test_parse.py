@@ -143,3 +143,27 @@ def test_parse_number():
         jsxml = js2xml.parse(snippet)
         result = jsxml.xpath("//number/text()")
         assert_list_equal(result, expected)
+
+
+def test_parse_undefined():
+    jscode_snippets = [
+        (
+        r"""
+        myArray = [0,1,,,4,5];
+        """, 2
+        ),
+        (
+        r"""
+        myArray = [,1,,,4,];
+        """, 3 # and not 4
+        ),
+        (r"""
+        myArray = [,1,,,4,,,];
+        """, 5
+        ),
+    ]
+
+    for snippet, expected in jscode_snippets:
+        jsxml = js2xml.parse(snippet)
+        result = jsxml.xpath("count(//array/undefined)")
+        assert_equal(result, expected)
