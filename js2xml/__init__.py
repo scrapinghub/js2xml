@@ -6,8 +6,10 @@ from js2xml.xmlvisitor import XmlVisitor
 _parser = Parser()
 _visitor = XmlVisitor()
 
-def parse(text, debug=False):
-    tree = _parser.parse(text, debug=debug)
+def parse(text, encoding="utf8", debug=False):
+    if encoding not in (None, "utf8"):
+        text = text.decode(encoding)
+    tree = _parser.parse(text if not isinstance(text, unicode) else text.encode("utf8"), debug=debug)
     xml = _visitor.visit(tree)
     return xml
 
@@ -67,6 +69,8 @@ def make_dict(tree):
             return int(tree.text)
         except:
             return float(tree.text)
+    elif tree.tag == 'undefined':
+        return tree.tag
 
 
 def getall_jsonlike(tree):

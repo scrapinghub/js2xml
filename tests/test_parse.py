@@ -167,3 +167,26 @@ def test_parse_undefined():
         jsxml = js2xml.parse(snippet)
         result = jsxml.xpath("count(//array/undefined)")
         assert_equal(result, expected)
+
+
+def test_parse_encoding():
+
+    jscode_snippets = [
+        (u"""
+        var test = "Daniel Gra\xf1a";
+        """,
+        None,
+        [u"Daniel Gra\xf1a"]
+        ),
+        (u"""
+        var test = "Daniel Gra\xf1a";
+        """.encode("latin1"),
+        "latin1",
+        [u"Daniel Gra\xf1a"]
+        ),
+    ]
+
+    for snippet, encoding, expected in jscode_snippets:
+        jsxml = js2xml.parse(snippet, encoding=encoding)
+        result = jsxml.xpath("//string/text()")
+        assert_equal(result, expected)
