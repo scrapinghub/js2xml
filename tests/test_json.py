@@ -89,3 +89,7 @@ def test_json():
         jsxml = js2xml.parse(snippet)
         results = js2xml.findall_jsonlike(jsxml)
         assert_list_equal([js2xml.make_dict(r) for r in results], expected)
+
+    for snippet, expected in jscode_snippets:
+        jsxml = js2xml.parse(snippet)
+        assert_list_equal(js2xml.getall_jsonlike(jsxml), expected)
