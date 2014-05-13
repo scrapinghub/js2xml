@@ -68,3 +68,11 @@ def make_dict(tree):
         except:
             return float(tree.text)
 
+
+def getall_jsonlike(tree):
+    results = _xp_findjsonlike(tree)
+    out = []
+    if results is not None:
+        for r in results:
+            out.append(make_dict(r))
+    return out
