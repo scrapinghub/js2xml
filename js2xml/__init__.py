@@ -8,7 +8,6 @@ _visitor = XmlVisitor()
 
 def parse(text, debug=False):
     tree = _parser.parse(text, debug=debug)
-    _parser._error_tokens = {}
     xml = _visitor.visit(tree)
     return xml
 

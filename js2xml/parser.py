@@ -29,3 +29,8 @@ class CustomParser(Parser):
             start='program')
 
         self._error_tokens = {}
+
+    def parse(self, text, debug=False):
+        result = super(CustomParser, self).parse(text, debug=debug)
+        self._error_tokens = {}
+        return result
