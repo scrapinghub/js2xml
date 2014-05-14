@@ -1,4 +1,5 @@
 import js2xml
+import js2xml.jsonlike
 from nose.tools import *
 
 
@@ -11,7 +12,23 @@ def test_json():
             """,
             [['a', 'b', 'c'],
              ['d', 'e', 'f']]
-            ),
+        ),
+        (
+            r"""
+            var arr1 = ["a", null, "c"];
+            var arr2 = [null, "e", null];
+            """,
+            [['a', None, 'c'],
+             [None, 'e', None]]
+        ),
+        (
+            r"""
+            var arr1 = ["a", undefined, "c"];
+            var arr2 = [undefined, "e", null];
+            """,
+            [['a', 'undefined', 'c'],
+             ['undefined', 'e', None]]
+        ),
         (
             r"""
             var i = -3.14;
@@ -87,9 +104,9 @@ def test_json():
 
     for snippet, expected in jscode_snippets:
         jsxml = js2xml.parse(snippet)
-        results = js2xml.findall_jsonlike(jsxml)
-        assert_list_equal([js2xml.make_dict(r) for r in results], expected)
+        results = js2xml.jsonlike.findall(jsxml)
+        assert_list_equal([js2xml.jsonlike.make_dict(r) for r in results], expected)
 
     for snippet, expected in jscode_snippets:
         jsxml = js2xml.parse(snippet)
-        assert_list_equal(js2xml.getall_jsonlike(jsxml), expected)
+        assert_list_equal(js2xml.jsonlike.getall(jsxml), expected)

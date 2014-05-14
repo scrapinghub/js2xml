@@ -56,6 +56,8 @@ class XmlVisitor(object):
         if isinstance(node.value, (int, float)):
             return E.identifier(node.value)
         elif isinstance(node.value, (str, unicode)):
+            if node.value == "undefined":
+                return E.undefined()
             return E.identifier(node.value)
 
     def visit_Assign(self, node):
@@ -65,7 +67,6 @@ class XmlVisitor(object):
             template = '%s %s %s'
         if getattr(node, '_parens', False):
             template = '(%s)' % template
-        #print node.__dict__
         assign = E.assign()
         assign.append(E.left(self.visit(node.left)))
         assign.append(E.operator(self.visit_Operator(node.op)))
