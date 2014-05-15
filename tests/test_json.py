@@ -101,12 +101,36 @@ def test_json():
               'tomatoes': 20}]
         ),
     ]
-
-    for snippet, expected in jscode_snippets:
-        jsxml = js2xml.parse(snippet)
-        results = js2xml.jsonlike.findall(jsxml)
-        assert_list_equal([js2xml.jsonlike.make_dict(r) for r in results], expected)
-
     for snippet, expected in jscode_snippets:
         jsxml = js2xml.parse(snippet)
         assert_list_equal(js2xml.jsonlike.getall(jsxml), expected)
+
+
+def test_findall():
+    jscode_snippets = [
+        (
+            r"""
+            var arr1 = ["a","b","c"];
+            var arr2 = ["d","e","f"];
+            """,
+            '//array',
+            [['a', 'b', 'c'],
+             ['d', 'e', 'f']]
+        ),
+        (
+            r"""
+            var arr1 = {"a": "b", "c": "d"};
+            var arr2 = {"e": 1, "f": 2};
+            """,
+            '//object',
+            [{'a': 'b', 'c': 'd'},
+             {'e': 1, 'f': 2}]
+        ),
+    ]
+
+    for snippet, xp, expected in jscode_snippets:
+        js = js2xml.parse(snippet)
+        results = []
+        for r in js.xpath(xp):
+            results.extend(js2xml.jsonlike.findall(r))
+        assert_list_equal([js2xml.jsonlike.make_dict(r) for r in results], expected)

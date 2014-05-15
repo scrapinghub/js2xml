@@ -44,18 +44,10 @@ _jsonlike_xpath = """
 _xp_jsonlike = lxml.etree.XPath(_jsonlike_xpath)
 
 _alljsonlike_xpath = """
-    .//*[self::object or self::array]
-        [not(./descendant::*[not(%(elements)s)])]
+    ./descendant-or-self::*[self::object or self::array]
+                           [not(./descendant::*[not(%(elements)s)])]
 """ % {"elements": _jsonlike_elements}
 _xp_alljsonlike = lxml.etree.XPath(_alljsonlike_xpath)
-
-_topjsonlike_xpath = """
-    .//*[self::object or self::array]
-        [not(./descendant::*[not(%(elements)s)])]
-        [not(ancestor::*[%(jsonlike)s])]
-""" % {"elements": _jsonlike_elements,
-       "jsonlike": _jsonlike_xpath}
-_xp_topjsonlike = lxml.etree.XPath(_topjsonlike_xpath)
 
 
 def is_jsonlike(subtree):
