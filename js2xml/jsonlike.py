@@ -6,9 +6,11 @@ def make_dict(tree):
         return [make_dict(child) for child in tree.iterchildren()]
     elif tree.tag == 'object':
         return dict([make_dict(child) for child in tree.iterchildren()])
-    elif tree.tag == 'assign':
-        return (make_dict(tree.find('./left/*')), make_dict(tree.find('./right/*')))
+    elif tree.tag == 'property':
+        return (tree.get('name'), make_dict(tree.find('./*')))
     elif tree.tag == 'string':
+        return tree.text
+    elif tree.tag == 'identifier':
         return tree.text
     elif tree.tag == 'boolean':
         return tree.text == 'true'
@@ -25,10 +27,8 @@ def make_dict(tree):
 _jsonlike_elements = """
        self::object
     or self::array
-    or self::assign
-    or self::left
-    or self::right
-    or self::operator[.=":"]
+    or self::property
+    or self::identifier[parent::property]
     or self::string
     or self::number
     or self::boolean

@@ -62,16 +62,17 @@ class XmlVisitor(object):
 
     def visit_Assign(self, node):
         if node.op == ':':
-            template = '%s%s %s'
+
+            propname = self.visit(node.left)
+            propel = E.property(name=propname.text)
+            propel.append(self.visit(node.right))
+            return propel
         else:
-            template = '%s %s %s'
-        if getattr(node, '_parens', False):
-            template = '(%s)' % template
-        assign = E.assign()
-        assign.append(E.left(self.visit(node.left)))
-        assign.append(E.operator(self.visit_Operator(node.op)))
-        assign.append(E.right(self.visit(node.right)))
-        return assign
+            assign = E.assign()
+            assign.append(E.left(self.visit(node.left)))
+            assign.append(E.operator(self.visit_Operator(node.op)))
+            assign.append(E.right(self.visit(node.right)))
+            return assign
 
     def visit_GetPropAssign(self, node):
         get = E.get()
