@@ -28,6 +28,7 @@ _jsonlike_elements = """
        self::object
     or self::array
     or self::property
+    or self::identifier[parent::property]
     or self::string
     or self::number
     or self::boolean

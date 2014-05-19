@@ -52,6 +52,16 @@ def test_json():
         ),
         (
             r"""
+            currency = 'USD',
+            money = {
+                "value": 20,
+                "currency": currency
+            };
+            """,
+            [{'currency': 'currency', 'value': 20}]
+        ),
+        (
+            r"""
             t = {a: "3", "b": 3, "3": 3.0};
             """,
             [{'3': 3.0, 'a': '3', 'b': 3}]
