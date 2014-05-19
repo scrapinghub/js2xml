@@ -45,6 +45,20 @@ def test_json():
         (
             r"""
             money = {
+                quarters: 20
+            };
+            """,
+            [{"quarters": 20}]
+        ),
+        (
+            r"""
+            t = {a: "3", "b": 3, "3": 3.0};
+            """,
+            [{'3': 3.0, 'a': '3', 'b': 3}]
+        ),
+        (
+            r"""
+            money = {
                 'quarters': 10,
                 'addQuarters': function(amount) {
                     this.quarters += amount;
