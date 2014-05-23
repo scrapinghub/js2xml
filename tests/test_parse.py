@@ -63,6 +63,19 @@ def test_parse_string():
         var i = 'test\'s output';
         """, [r"test's output"]
         ),
+        (
+        r"""
+        var i = 'test\
+ multiline';
+        """, [r"test multiline"]
+        ),
+        (
+        r"""
+        var i = 'test\
+ long \
+ multiline';
+        """, [r"test long  multiline"]
+        ),
 
         (
         r"""
@@ -141,7 +154,7 @@ def test_parse_number():
 
     for snippet, expected in jscode_snippets:
         jsxml = js2xml.parse(snippet)
-        result = jsxml.xpath("//number/text()")
+        result = jsxml.xpath("//number/@value")
         assert_list_equal(result, expected)
 
 

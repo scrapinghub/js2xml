@@ -11,9 +11,6 @@ def unescape_string(input_string):
 
 class XmlVisitor(object):
 
-    def _make_indent(self):
-        return ' '
-
     def visit(self, node):
         method = 'visit_%s' % node.__class__.__name__
         #print method, node,
@@ -29,106 +26,122 @@ class XmlVisitor(object):
     def visit_Program(self, node):
         program = E.program()
         for child in node:
-            program.append(self.visit(child))
+            program.extend(self.visit(child))
         return program
 
     def visit_Block(self, node):
         block = E.block()
         for child in node:
-            #print child
-            block.append(self.visit(child))
-        return block
+            block.extend(self.visit(child))
+        return [block]
 
     def visit_VarStatement(self, node):
-        var = E.var()
-        for child in node:
-            var.append(self.visit(child))
-        return var
+        return [el for child in node for el in self.visit(child)]
 
     def visit_VarDecl(self, node):
-        var_decl = E.var_decl()
-        var_decl.append(self.visit(node.identifier))
+        identifier = self.visit(node.identifier)[0]
+        varel = E.var(name=identifier.get("name"))
         if node.initializer is not None:
-            var_decl.append(E.initializer(self.visit(node.initializer)))
-        return var_decl
+            varel.extend(self.visit(node.initializer))
+        return [varel]
 
     def visit_Identifier(self, node):
         if isinstance(node.value, (int, float)):
-            return E.identifier(node.value)
+            return [E.identifier(node.value)]
         elif isinstance(node.value, (str, unicode)):
             if node.value == "undefined":
-                return E.undefined()
-            return E.identifier(node.value)
+                return [E.undefined()]
+            idel = E.identifier()
+            idel.attrib["name"] = node.value
+            return [idel]
 
     def visit_Assign(self, node):
         if node.op == ':':
+            propname = self.visit(node.left)[0]
+            if isinstance(node.left, ast.String):
+                propel = E.property(name=propname.text)
+            elif isinstance(node.left, ast.Identifier):
+                propel = E.property(name=propname.get("name"))
+            else:
+                print type(propname)
+                raise RuntimeError
 
-            propname = self.visit(node.left)
-            propel = E.property(name=propname.text)
-            propel.append(self.visit(node.right))
-            return propel
+            propel.extend(self.visit(node.right))
+            return [propel]
         else:
-            assign = E.assign()
-            assign.append(E.left(self.visit(node.left)))
-            assign.append(E.operator(self.visit_Operator(node.op)))
-            assign.append(E.right(self.visit(node.right)))
-            return assign
+            assign = E.assign(operator=node.op)
+            left = E.left()
+            left.extend(self.visit(node.left))
+            right = E.right()
+            right.extend(self.visit(node.right))
+            assign.append(left)
+            assign.append(right)
+            return [assign]
 
     def visit_GetPropAssign(self, node):
-        get = E.get()
-        get.append(E.property(self.visit(node.prop_name)))
+        propel = E.property()
+        propel.extend(self.visit(node.prop_name))
+        getel = E.get()
+        getel.append(propel)
         body = E.body()
         for el in node.elements:
-            body.append(self.visit(el))
-        get.append(body)
-        return get
+            body.extend(self.visit(el))
+        getel.append(body)
+        return [getel]
 
     def visit_SetPropAssign(self, node):
-        template = 'set %s(%s) {\n%s\n%s}'
-        if getattr(node, '_parens', False):
-            template = '(%s)' % template
+        propel = E.property()
+        propel.extend(self.visit(node.prop_name))
+        setel = ET("set")
         if len(node.parameters) > 1:
             raise SyntaxError(
                 'Setter functions must have one argument: %s' % node)
-        params = ','.join(self.visit(param) for param in node.parameters)
-        body = '\n'.join(
-            (self._make_indent() + self.visit(el))
-            for el in node.elements
-            )
-        tail = self._make_indent()
-        return template % (self.visit(node.prop_name), params, body, tail)
+        params = E.params()
+        for param in node.parameters:
+            params.extend(self.visit(param))
+        for el in node.elements:
+            body.extend(self.visit(el))
+        setel.append(body)
+        return [setel]
 
     def visit_Number(self, node):
-        return E.number(node.value)
+        return [E.number(value=node.value)]
 
     def visit_Comma(self, node):
-        comma = E.comma(E.left(self.visit(node.left)),
-                        E.right(self.visit(node.right)))
-        return comma
+        comma = E.comma(E.left(self.visit(node.left)[0]),
+                        E.right(self.visit(node.right)[0]))
+        return [comma]
 
     def visit_EmptyStatement(self, node):
-        return E.empty(node.value)
+        return [E.empty(node.value)]
 
     def visit_If(self, node):
         ifel = ET.Element("if")
         if node.predicate is not None:
-            ifel.append(E.predicate(self.visit(node.predicate)))
-        ifel.append(E.then(self.visit(node.consequent)))
+            predicate = E.predicate()
+            predicate.extend(self.visit(node.predicate))
+            ifel.append(predicate)
+
+        then = E.then()
+        then.extend(self.visit(node.consequent))
+        ifel.append(then)
+
         if node.alternative is not None:
             elseel = ET.Element("else")
-            elseel.append(self.visit(node.alternative))
-            ifel.append(elseel)
-        return ifel
+            elseel.extend(self.visit(node.alternative))
+            ifel.extend(elseel)
+
+        return [ifel]
 
     def visit_Boolean(self, node):
-        return E.boolean(node.value)
+        return [E.boolean(node.value)]
 
     def visit_For(self, node):
         forel = ET.Element("for")
         if node.init is not None:
-            forel.append(E.init(self.visit(node.init)))
+            forel.extend(E.init(self.visit(node.init)))
         if node.init is None:
-            forel.append(E.init())
+            forel.extend(E.init())
         elif isinstance(node.init, (ast.Assign, ast.Comma, ast.FunctionCall,
                                     ast.UnaryOp, ast.Identifier, ast.BinOp,
                                     ast.Conditional, ast.Regex, ast.NewExpr)):
@@ -143,38 +156,31 @@ class XmlVisitor(object):
         return forel
 
     def visit_ForIn(self, node):
-        if isinstance(node.item, ast.VarDecl):
-            template = 'for (var %s in %s) '
-        else:
-            template = 'for (%s in %s) '
         forel = ET.Element("forin")
         forel.append(E.variable(self.visit(node.item)))
-        forel.append(E.object(self.visit(node.iterable)))
-        return forel
+        objel = ET("object")
+        objel.extend(self.visit(node.iterable))
+        forel.append(objel)
+        return [forel]
 
     def visit_BinOp(self, node):
-        binop = E.binaryoperation()
-        binop.append(E.left(self.visit(node.left)))
-        binop.append(E.operator(self.visit(node.op)))
-        binop.append(E.right(self.visit(node.right)))
-        return binop
-
-        #if getattr(node, '_parens', False):
-            #template = '(%s %s %s)'
-        #else:
-            #template = '%s %s %s'
-        #return template % (
-            #self.visit(node.left), node.op, self.visit(node.right))
+        binop = E.binaryoperation(operation=node.op)
+        leftpart = E.left()
+        leftpart.extend(self.visit(node.left))
+        binop.append(leftpart)
+        rightpart = E.right(*self.visit(node.right))
+        binop.append(rightpart)
+        return [binop]
 
     def visit_UnaryOp(self, node):
         unary = E.unaryoperation()
         if node.postfix:
-            unary.append(self.visit(node.value))
-            unary.append(E.operator(self.visit(node.op)))
+            unary.extend(self.visit(node.value))
+            operator = E.operator(self.visit(node.op))
+            unary.append(operator)
         elif node.op in ('delete', 'void', 'typeof'):
-            #s = '%s %s' % (node.op, s)
             unary.append(E.operation(node.op))
-            unary.append(self.visit(node.value))
+            unary.extend(self.visit(node.value))
         else:
             # convert things like "+3.14" and "-22"
             if node.op in ("-", "+") and isinstance(node.value, ast.Number):
@@ -182,26 +188,30 @@ class XmlVisitor(object):
                 return self.visit(node.value)
             else:
                 unary.append(E.operation(node.op))
-                unary.append(self.visit(node.value))
-        return unary
+                unary.extend(self.visit(node.value))
+        return [unary]
 
     def visit_ExprStatement(self, node):
         return self.visit(node.expr)
 
     def visit_DoWhile(self, node):
         dowhile = E.dowhile()
-        dowhile.append(E.statement(self.visit(node.statement)))
-        dowhile.append(ET.Element("while", self.visit(node.predicate)))
+        dowhile.extend(E.statement(self.visit(node.statement)))
+        dowhile.extend(ET.Element("while", self.visit(node.predicate)))
         return dowhile
 
     def visit_While(self, node):
         whileel = ET.Element("while")
-        whileel.append(E.predicate(self.visit(node.predicate)))
-        whileel.append(E.statement(self.visit(node.statement)))
-        return whileel
+        predicate = E.predicate()
+        predicate.extend(self.visit(node.predicate))
+        whileel.append(predicate)
+        statement = E.statement()
+        statement.extend(self.visit(node.statement))
+        whileel.append(statement)
+        return [whileel]
 
     def visit_Null(self, node):
-        return E.null()
+        return [E.null()]
 
     def visit_Operator(self, node):
         try:
@@ -213,96 +223,115 @@ class XmlVisitor(object):
         return node
 
     def visit_String(self, node):
-        return E.string(unescape_string(pyast.literal_eval("u"+node.value.decode("utf8"))))
+        str_value = pyast.literal_eval("u"+node.value.decode("utf8"))
+        return [E.string(unescape_string(str_value))]
 
     def visit_Continue(self, node):
         continueel = ET.Element("continue")
         if node.identifier is not None:
             continueel.append(self.visit_Identifier(node.identifier))
-        return continueel
+        return [continueel]
 
     def visit_Break(self, node):
         breakel = ET.Element("break")
         if node.identifier is not None:
             breakel.append(self.visit_Identifier(node.identifier))
-        return breakel
+        return [breakel]
 
     def visit_Return(self, node):
         ret = ET.Element("return")
         if node.expr is not None:
-            ret.append(self.visit(node.expr))
-        return ret
+            ret.extend(self.visit(node.expr))
+        return [ret]
 
     def visit_With(self, node):
         withel = ET.Element("with")
-        withel.append(self.visit(node.expr))
-        withel.append(E.statement(self.visit(node.statement)))
-        return withel
+        withel.extend(self.visit(node.expr))
+        statement = E.statement()
+        statement.extend(self.visit(node.statement))
+        withel.append(statement)
+        return [withel]
 
     def visit_Label(self, node):
         label = E.label()
         label.append(E.identifier(self.visit(node.identifier)))
-        label.append(E.statement(self.visit(node.statement)))
-        return label
+        statement = E.statement()
+        statement.extend(self.visit(node.statement))
+        label.append(statement)
+        return [label]
 
     def visit_Switch(self, node):
-        switch = E.switch(E.expression(self.visit(node.expr)))
+        expression = E.expression()
+        expression.extend(self.visit(node.expr))
+        switch = E.switch()
+        switch.append(expression)
         for case in node.cases:
-            switch.append(self.visit_Case(case))
+            switch.extend(self.visit_Case(case))
         if node.default is not None:
-            switch.append(self.visit_Default(node.default))
-        return switch
+            switch.extend(self.visit_Default(node.default))
+        return [switch]
 
     def visit_Case(self, node):
+        expression = E.expression()
+        expression.extend(self.visit(node.expr))
         case = E.case()
-        case.append(E.expression(self.visit(node.expr)))
+        case.append(expression)
         for element in node.elements:
-            case.append(self.visit(element))
-        return case
+            case.extend(self.visit(element))
+        return [case]
 
     def visit_Default(self, node):
         default = E.default()
         for element in node.elements:
-            default.append(self.visit(element))
-        return default
+            default.extend(self.visit(element))
+        return [default]
 
     def visit_Throw(self, node):
-        return E.throw(self.visit(node.expr))
+        throwel = E.throw()
+        throwel.extend(self.visit(node.expr))
+        return [throwel]
 
     def visit_Debugger(self, node):
-        return E.debugger(node.value)
+        return [E.debugger(node.value)]
 
     def visit_Try(self, node):
         tryel = ET.Element("try")
-        tryel.append(E.statements(self.visit(node.statements)))
+        statements = E.statements()
+        statements.extend(self.visit(node.statements))
+        tryel.append(statements)
         if node.catch is not None:
-            tryel.append(self.visit(node.catch))
+            tryel.extend(self.visit(node.catch))
         if node.fin is not None:
-            tryel.append(self.visit(node.fin))
-        return tryel
+            tryel.extend(self.visit(node.fin))
+        return [tryel]
 
     def visit_Catch(self, node):
-        return E.catch(E.expression(self.visit(node.identifier)),
-                       E.body(self.visit(node.elements)))
+        expression = E.expression(self.visit(node.identifier))
+        body = E.body()
+        body.extend(self.visit(node.elements))
+        return [E.catch(expression, body)]
 
     def visit_Finally(self, node):
-        return ET.Element("finally", self.visit(node.elements))
+        finallyel = ET.Element("finally")
+        finallyel.extend(self.visit(node.elements))
+        return [finallyel]
 
     def visit_FuncDecl(self, node):
         funcdecl = E.funcdecl()
         if node.identifier is not None:
             funcdecl.append(self.visit(node.identifier))
         else:
-            funcdecl.append(E.identifier())
+            #funcdecl.extend(E.identifier())
+            pass
         parameters = E.parameters()
         for param in node.parameters:
-            parameters.append(self.visit(param))
+            parameters.extend(self.visit(param))
         funcdecl.append(parameters)
         funcbody = E.body()
         for element in node.elements:
-            funcbody.append(self.visit(element))
+            funcbody.extend(self.visit(element))
         funcdecl.append(funcbody)
-        return funcdecl
+        return [funcdecl]
 
     def visit_FuncExpr(self, node):
         funcexpr = E.funcexpr()
@@ -312,58 +341,71 @@ class XmlVisitor(object):
             funcexpr.append(E.identifier())
         parameters = E.parameters()
         for param in node.parameters:
-            parameters.append(self.visit(param))
+            parameters.extend(self.visit(param))
         funcexpr.append(parameters)
         body = E.body()
         for element in node.elements:
-            body.append(self.visit(element))
+            body.extend(self.visit(element))
         funcexpr.append(body)
-        return funcexpr
+        return [funcexpr]
 
     def visit_Conditional(self, node):
         conditional = E.conditional()
-        conditional.append(E.condition(self.visit(node.predicate)))
-        conditional.append(E.value1(self.visit(node.consequent)))
-        conditional.append(E.value2(self.visit(node.alternative)))
-        return conditional
+        condition = E.condition(self.visit(node.predicate))
+        value1 = E.value1()
+        value1.extend(self.visit(node.consequent))
+        value2 = E.value2()
+        value2.extend(self.visit(node.alternative))
+        conditional.append(condition)
+        conditional.append(value1)
+        conditional.append(value2)
+        return [conditional]
 
     def visit_Regex(self, node):
-        return E.regex(node.value)
+        return [E.regex(node.value)]
 
     def visit_NewExpr(self, node):
         newel = E.new()
         newel.append(self.visit(node.identifier))
         arguments = E.arguments()
         for arg in node.args:
-            arguments.append(self.visit(arg))
+            arguments.extend(self.visit(arg))
         newel.append(arguments)
-        return newel
+        return [newel]
 
     def visit_DotAccessor(self, node):
         dot = E.dotaccessor()
-        dot.append(E.object(self.visit(node.node)))
-        dot.append(E.property(self.visit(node.identifier)))
-        return dot
+        objel = E.object()
+        objel.extend(self.visit(node.node))
+        propel = E.property()
+        propel.extend(self.visit(node.identifier))
+        dot.append(objel)
+        dot.append(propel)
+        return [dot]
 
     def visit_BracketAccessor(self, node):
-        bracket = E.bracketaccessor(E.object(self.visit(node.node)),
-                                    E.property(self.visit(node.expr)))
-        return bracket
+        objel = E.object()
+        objel.extend(self.visit(node.node))
+        propel = E.property()
+        propel.extend(self.visit(node.expr))
+        bracket = E.bracketaccessor(objel, propel)
+        return [bracket]
 
     def visit_FunctionCall(self, node):
-        funccall = E.functioncall()
-        funccall.append(E.identifier(self.visit(node.identifier)))
+        function = E.function()
+        function.extend(self.visit(node.identifier))
+        funccall = E.functioncall(function)
         arguments = E.arguments()
         for arg in node.args:
-            arguments.append(self.visit(arg))
+            arguments.extend(self.visit(arg))
         funccall.append(arguments)
-        return funccall
+        return [funccall]
 
     def visit_Object(self, node):
         obj = ET.Element("object")
         for prop in node.properties:
-            obj.append(self.visit(prop))
-        return obj
+            obj.extend(self.visit(prop))
+        return [obj]
 
     def visit_Array(self, node):
         array = E.array()
@@ -372,9 +414,9 @@ class XmlVisitor(object):
             if isinstance(item, ast.Elision):
                 array.append(E.undefined())
             else:
-                array.append(self.visit(item))
-        return array
+                array.extend(self.visit(item))
+        return [array]
 
     def visit_This(self, node):
-        return E.identifier('this')
+        return [E.identifier('this')]
 

@@ -11,14 +11,14 @@ def make_dict(tree):
     elif tree.tag == 'string':
         return tree.text
     elif tree.tag == 'identifier':
-        return tree.text
+        return tree.get("name")
     elif tree.tag == 'boolean':
         return tree.text == 'true'
     elif tree.tag == 'number':
         try:
-            return int(tree.text)
+            return int(tree.get("value"))
         except:
-            return float(tree.text)
+            return float(tree.get("value"))
     elif tree.tag == 'undefined':
         return tree.tag
     elif tree.tag == 'null':
