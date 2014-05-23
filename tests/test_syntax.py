@@ -95,6 +95,167 @@ def test_syntax():
         } else {
             result = alternative;
         };""",
+
+        r"""
+        if (exprA == exprB) {
+           result = expression;
+        } else if (expr2) {
+           result = alternative1;
+        } else {
+           result = alternative2;
+        };""",
+
+        "result = condition ? expression : alternative;",
+
+        # switch
+        r"""
+        switch (expr) {
+           case SOMEVALUE:
+             //statements;
+             break;
+           case ANOTHERVALUE:
+             //statements;
+             break;
+           default:
+             //statements;
+             break;
+         }
+        """
+
+        # for loop
+        r"""
+        for (var i = 0; i < 5; i++) {
+            a = i;
+        }
+        """,
+        r"""
+        for (var i = 0; i < 5; i++) {
+            a = i
+        }
+        """,
+        r"""
+        for (var key in array) {
+            continue;
+        }
+        """,
+        r"""
+        for (;;) {
+            break;
+        }
+        """,
+        r"""
+        for (; i < len; i++) {
+            text += cars[i] + "<br>";
+        }
+        """,
+        r"""
+        for (var i = 0, len = cars.length, text = ""; i < len; i++) {
+            text += cars[i] + "<br>";
+        }
+        """,
+        """
+        for (; i < len; ) {
+            text += cars[i] + "<br>";
+            i++;
+        }
+        """,
+
+        # while loop
+        """
+        while (a<b) {
+           a+=1;
+        }
+        """,
+        """
+        do {
+           a+=1;
+         } while (a<b);
+        """,
+
+        # with
+        """
+        with (document) {
+           var a = getElementById('a');
+           var b = getElementById('b');
+           var c = getElementById('c');
+         };
+        """,
+
+        # label
+        r"""
+        loop1: for (var a = 0; a < 10; a++) {
+           if (a == 4) {
+               break loop1; // Stops after the 4th attempt
+           }
+           alert('a = ' + a);
+           loop2: for (var b = 0; b < 10; ++b) {
+              if (b == 3) {
+                 continue loop2; // Number 3 is skipped
+              }
+              if (b == 6) {
+                 continue loop1; // Continues the first loop, 'finished' is not shown
+              }
+              alert('b = ' + b);
+           }
+           alert('finished')
+        }
+        block1: {
+            alert('hello'); // Displays 'hello'
+            break block1;
+            alert('world'); // Will never get here
+        }
+        """,
+
+        # functions
+        """
+        function foo(p) {
+            p = "bar";
+        }
+        """,
+        """
+        function hello() {
+            alert('world');
+        }
+        """,
+        """
+        var anon = function() {
+            alert('I am anonymous');
+        };
+        """,
+        """
+        anon();
+        """,
+        """
+        setTimeout(function() {
+            alert('hello');
+        }, 1000)
+        """,
+        """
+        (function() {
+            alert('foo');
+        }());
+        """,
+
+        # get/set
+        """
+        var obj = {
+          get latest () {
+            return "latest";
+          }
+        }
+        """,
+        """
+        delete obj.latest;
+        """,
+        """
+        var o = {
+          set current (str) {
+            return this.log[this.log.length] = str;
+          },
+          log: []
+        }
+        """,
+
     ]
 
     for snippet in jscode_snippets:

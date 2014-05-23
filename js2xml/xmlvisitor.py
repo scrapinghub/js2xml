@@ -92,13 +92,15 @@ class XmlVisitor(object):
     def visit_SetPropAssign(self, node):
         propel = E.property()
         propel.extend(self.visit(node.prop_name))
-        setel = ET("set")
+        setel = ET.Element("set")
         if len(node.parameters) > 1:
             raise SyntaxError(
                 'Setter functions must have one argument: %s' % node)
         params = E.params()
         for param in node.parameters:
             params.extend(self.visit(param))
+
+        body = E.body()
         for el in node.elements:
             body.extend(self.visit(el))
         setel.append(body)
@@ -139,7 +141,9 @@ class XmlVisitor(object):
     def visit_For(self, node):
         forel = ET.Element("for")
         if node.init is not None:
-            forel.extend(E.init(self.visit(node.init)))
+            initel = E.init()
+            initel.extend(self.visit(node.init))
+            forel.append(initel)
         if node.init is None:
             forel.extend(E.init())
         elif isinstance(node.init, (ast.Assign, ast.Comma, ast.FunctionCall,
@@ -149,18 +153,31 @@ class XmlVisitor(object):
         else:
             pass
         if node.cond is not None:
-            forel.append(E.condition(self.visit(node.cond)))
+            condition = E.condition()
+            condition.extend(self.visit(node.cond))
+            forel.append(condition)
+
         if node.count is not None:
-            forel.append(E.post(self.visit(node.count)))
-        forel.append(E.statement(self.visit(node.statement)))
-        return forel
+            post = E.post()
+            post.extend(self.visit(node.count))
+            forel.append(post)
+
+        statement = E.statement()
+        statement.extend(self.visit(node.statement))
+        forel.append(statement)
+        return [forel]
 
     def visit_ForIn(self, node):
-        forel = ET.Element("forin")
-        forel.append(E.variable(self.visit(node.item)))
-        objel = ET("object")
+        variable = E.variable()
+        variable.extend(self.visit(node.item))
+
+        objel = ET.Element("object")
         objel.extend(self.visit(node.iterable))
+
+        forel = ET.Element("forin")
+        forel.append(variable)
         forel.append(objel)
+
         return [forel]
 
     def visit_BinOp(self, node):
@@ -196,8 +213,12 @@ class XmlVisitor(object):
 
     def visit_DoWhile(self, node):
         dowhile = E.dowhile()
-        dowhile.extend(E.statement(self.visit(node.statement)))
-        dowhile.extend(ET.Element("while", self.visit(node.predicate)))
+        statement = E.statement()
+        statement.extend(self.visit(node.statement))
+        dowhile.append(statement)
+        whileel = ET.Element("while")
+        whileel.extend(self.visit(node.predicate))
+        dowhile.append(whileel)
         return dowhile
 
     def visit_While(self, node):
@@ -229,13 +250,13 @@ class XmlVisitor(object):
     def visit_Continue(self, node):
         continueel = ET.Element("continue")
         if node.identifier is not None:
-            continueel.append(self.visit_Identifier(node.identifier))
+            continueel.extend(self.visit_Identifier(node.identifier))
         return [continueel]
 
     def visit_Break(self, node):
         breakel = ET.Element("break")
         if node.identifier is not None:
-            breakel.append(self.visit_Identifier(node.identifier))
+            breakel.extend(self.visit_Identifier(node.identifier))
         return [breakel]
 
     def visit_Return(self, node):
@@ -253,8 +274,8 @@ class XmlVisitor(object):
         return [withel]
 
     def visit_Label(self, node):
-        label = E.label()
-        label.append(E.identifier(self.visit(node.identifier)))
+        identifier = self.visit(node.identifier)[0]
+        label = E.label(name=identifier.get("name"))
         statement = E.statement()
         statement.extend(self.visit(node.statement))
         label.append(statement)
@@ -318,11 +339,11 @@ class XmlVisitor(object):
 
     def visit_FuncDecl(self, node):
         funcdecl = E.funcdecl()
+
         if node.identifier is not None:
-            funcdecl.append(self.visit(node.identifier))
-        else:
-            #funcdecl.extend(E.identifier())
-            pass
+            identifier = self.visit(node.identifier)[0]
+            funcdecl.attrib["name"] = identifier.get("name")
+
         parameters = E.parameters()
         for param in node.parameters:
             parameters.extend(self.visit(param))
@@ -351,14 +372,19 @@ class XmlVisitor(object):
 
     def visit_Conditional(self, node):
         conditional = E.conditional()
-        condition = E.condition(self.visit(node.predicate))
+
+        condition = E.condition()
+        condition.extend(self.visit(node.predicate))
+
         value1 = E.value1()
         value1.extend(self.visit(node.consequent))
         value2 = E.value2()
         value2.extend(self.visit(node.alternative))
+
         conditional.append(condition)
         conditional.append(value1)
         conditional.append(value2)
+
         return [conditional]
 
     def visit_Regex(self, node):
