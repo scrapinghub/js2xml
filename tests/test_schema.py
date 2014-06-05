@@ -440,15 +440,247 @@ def test_schema():
         r"""
         var i = obj.prop;
         """,
-        ""
+"""
+<program>
+  <var name="i">
+    <dotaccessor>
+      <object>
+        <identifier name="obj"/>
+      </object>
+      <property>
+        <identifier name="prop"/>
+      </property>
+    </dotaccessor>
+  </var>
+</program>
+"""
         ),
         (
         r"""var testObj = {};""",
-        ""
+"""
+<program>
+  <var name="testObj">
+    <object/>
+  </var>
+</program>
+"""
         ),
         (
         r"""var testObj = [];""",
-        ""
+"""
+<program>
+  <var name="testObj">
+    <array/>
+  </var>
+</program>
+"""
+        ),
+
+        # operations
+        (
+        r"""
+        1 + 2;
+        "foo" + false;
+        3 - 5
+        """,
+"""
+<program>
+  <binaryoperation operation="+">
+    <left>
+      <number value="1"/>
+    </left>
+    <right>
+      <number value="2"/>
+    </right>
+  </binaryoperation>
+  <binaryoperation operation="+">
+    <left>
+      <string>foo</string>
+    </left>
+    <right>
+      <boolean>false</boolean>
+    </right>
+  </binaryoperation>
+  <binaryoperation operation="-">
+    <left>
+      <number value="3"/>
+    </left>
+    <right>
+      <number value="5"/>
+    </right>
+  </binaryoperation>
+</program>
+"""
+        ),
+        (
+        r"""
+        1.0 / 2.0;
+        -2 * 2;
+        12 % 5;
+        """,
+"""
+<program>
+  <binaryoperation operation="/">
+    <left>
+      <number value="1.0"/>
+    </left>
+    <right>
+      <number value="2.0"/>
+    </right>
+  </binaryoperation>
+  <binaryoperation operation="*">
+    <left>
+      <number value="-2"/>
+    </left>
+    <right>
+      <number value="2"/>
+    </right>
+  </binaryoperation>
+  <binaryoperation operation="%">
+    <left>
+      <number value="12"/>
+    </left>
+    <right>
+      <number value="5"/>
+    </right>
+  </binaryoperation>
+</program>
+"""
+        ),
+
+        (
+        r"""
+        // Postfix
+        var x = 3;
+        y = x++; // y = 3, x = 4
+
+        // Prefix
+        var a = 2;
+        b = ++a; // a = 3, b = 3
+        """,
+"""
+<program>
+  <var name="x">
+    <number value="3"/>
+  </var>
+  <assign operator="=">
+    <left>
+      <identifier name="y"/>
+    </left>
+    <right>
+      <postfix operation="++">
+        <identifier name="x"/>
+      </postfix>
+    </right>
+  </assign>
+  <var name="a">
+    <number value="2"/>
+  </var>
+  <assign operator="=">
+    <left>
+      <identifier name="b"/>
+    </left>
+    <right>
+      <unaryoperation operation="++">
+        <identifier name="a"/>
+      </unaryoperation>
+    </right>
+  </assign>
+</program>
+
+"""     ),
+
+        (
+        r"""
+        // Postfix
+        var x = 3;
+        y = x--; // y = 3, x = 2
+
+        // Prefix
+        var a = 2;
+        b = --a; // a = 1, b = 1
+        """,
+"""
+<program>
+  <var name="x">
+    <number value="3"/>
+  </var>
+  <assign operator="=">
+    <left>
+      <identifier name="y"/>
+    </left>
+    <right>
+      <postfix operation="--">
+        <identifier name="x"/>
+      </postfix>
+    </right>
+  </assign>
+  <var name="a">
+    <number value="2"/>
+  </var>
+  <assign operator="=">
+    <left>
+      <identifier name="b"/>
+    </left>
+    <right>
+      <unaryoperation operation="--">
+        <identifier name="a"/>
+      </unaryoperation>
+    </right>
+  </assign>
+</program>
+"""     ),
+
+        (
+        r"""
+        var x = 3;
+        y = -x; // y = -3, x = 3
+        """,
+"""
+<program>
+  <var name="x">
+    <number value="3"/>
+  </var>
+  <assign operator="=">
+    <left>
+      <identifier name="y"/>
+    </left>
+    <right>
+      <unaryoperation operation="-">
+        <identifier name="x"/>
+      </unaryoperation>
+    </right>
+  </assign>
+</program>
+
+"""
+        ),
+
+        (
+        r"""
+        +3;     // 3
+        +"3";   // 3
+        +true;  // 1
+        +false; // 0
+        +null;  // 0
+        """,
+"""
+<program>
+  <number value="+3"/>
+  <unaryoperation operation="+">
+    <string>3</string>
+  </unaryoperation>
+  <unaryoperation operation="+">
+    <boolean>true</boolean>
+  </unaryoperation>
+  <unaryoperation operation="+">
+    <boolean>false</boolean>
+  </unaryoperation>
+  <unaryoperation operation="+">
+    <null/>
+  </unaryoperation>
+</program>
+"""
         ),
 
         # assignements
@@ -456,25 +688,90 @@ def test_schema():
         r"""
         i = b;
         """,
-        ""
+"""
+<program>
+  <assign operator="=">
+    <left>
+      <identifier name="i"/>
+    </left>
+    <right>
+      <identifier name="b"/>
+    </right>
+  </assign>
+</program>
+"""
         ),
         (
         r"""
         i.a = "b";
         """,
-        ""
+"""
+<program>
+  <assign operator="=">
+    <left>
+      <dotaccessor>
+        <object>
+          <identifier name="i"/>
+        </object>
+        <property>
+          <identifier name="a"/>
+        </property>
+      </dotaccessor>
+    </left>
+    <right>
+      <string>b</string>
+    </right>
+  </assign>
+</program>
+"""
         ),
         (
         r"""
         i["a"] = "b";
         """,
-        ""
+"""
+<program>
+  <assign operator="=">
+    <left>
+      <bracketaccessor>
+        <object>
+          <identifier name="i"/>
+        </object>
+        <property>
+          <string>a</string>
+        </property>
+      </bracketaccessor>
+    </left>
+    <right>
+      <string>b</string>
+    </right>
+  </assign>
+</program>
+"""
         ),
         (
         r"""
         i[a] = "b";
         """,
-        ""
+"""
+<program>
+  <assign operator="=">
+    <left>
+      <bracketaccessor>
+        <object>
+          <identifier name="i"/>
+        </object>
+        <property>
+          <identifier name="a"/>
+        </property>
+      </bracketaccessor>
+    </left>
+    <right>
+      <string>b</string>
+    </right>
+  </assign>
+</program>
+"""
         ),
 
         # control structures
@@ -482,8 +779,28 @@ def test_schema():
         r"""
         if (condition) {
             result = expression;
-        };""",
-        ""
+        }""",
+"""
+<program>
+  <if>
+    <predicate>
+      <identifier name="condition"/>
+    </predicate>
+    <then>
+      <block>
+        <assign operator="=">
+          <left>
+            <identifier name="result"/>
+          </left>
+          <right>
+            <identifier name="expression"/>
+          </right>
+        </assign>
+      </block>
+    </then>
+  </if>
+</program>
+"""
         ),
         (
         r"""
@@ -491,8 +808,40 @@ def test_schema():
             result = expression;
         } else {
             result = alternative;
-        };""",
-        ""
+        }""",
+"""
+<program>
+  <if>
+    <predicate>
+      <identifier name="condition"/>
+    </predicate>
+    <then>
+      <block>
+        <assign operator="=">
+          <left>
+            <identifier name="result"/>
+          </left>
+          <right>
+            <identifier name="expression"/>
+          </right>
+        </assign>
+      </block>
+    </then>
+    <else>
+      <block>
+        <assign operator="=">
+          <left>
+            <identifier name="result"/>
+          </left>
+          <right>
+            <identifier name="alternative"/>
+          </right>
+        </assign>
+      </block>
+    </else>
+  </if>
+</program>
+"""
         ),
 
         (
@@ -503,13 +852,92 @@ def test_schema():
            result = alternative1;
         } else {
            result = alternative2;
-        };""",
-        ""
+        }""",
+"""
+<program>
+  <if>
+    <predicate>
+      <binaryoperation operation="==">
+        <left>
+          <identifier name="exprA"/>
+        </left>
+        <right>
+          <identifier name="exprB"/>
+        </right>
+      </binaryoperation>
+    </predicate>
+    <then>
+      <block>
+        <assign operator="=">
+          <left>
+            <identifier name="result"/>
+          </left>
+          <right>
+            <identifier name="expression"/>
+          </right>
+        </assign>
+      </block>
+    </then>
+    <else>
+      <if>
+        <predicate>
+          <identifier name="expr2"/>
+        </predicate>
+        <then>
+          <block>
+            <assign operator="=">
+              <left>
+                <identifier name="result"/>
+              </left>
+              <right>
+                <identifier name="alternative1"/>
+              </right>
+            </assign>
+          </block>
+        </then>
+        <else>
+          <block>
+            <assign operator="=">
+              <left>
+                <identifier name="result"/>
+              </left>
+              <right>
+                <identifier name="alternative2"/>
+              </right>
+            </assign>
+          </block>
+        </else>
+      </if>
+    </else>
+  </if>
+</program>
+"""
         ),
 
         (
         "result = condition ? expression : alternative;",
-        ""
+"""
+<program>
+  <assign operator="=">
+    <left>
+      <identifier name="result"/>
+    </left>
+    <right>
+      <conditional>
+        <condition>
+          <identifier name="condition"/>
+        </condition>
+        <value1>
+          <identifier name="expression"/>
+        </value1>
+        <value2>
+          <identifier name="alternative"/>
+        </value2>
+      </conditional>
+    </right>
+  </assign>
+</program>
+"""
         ),
 
         # switch
@@ -527,7 +955,30 @@ def test_schema():
              break;
          }
         """,
-        ""
+"""
+<program>
+  <switch>
+    <expression>
+      <identifier name="expr"/>
+    </expression>
+    <case>
+      <expression>
+        <identifier name="SOMEVALUE"/>
+      </expression>
+      <break/>
+    </case>
+    <case>
+      <expression>
+        <identifier name="ANOTHERVALUE"/>
+      </expression>
+      <break/>
+    </case>
+    <default>
+      <break/>
+    </default>
+  </switch>
+</program>
+"""
         ),
 
         # for loop
@@ -537,7 +988,44 @@ def test_schema():
             a = i;
         }
         """,
-        ""
+"""
+<program>
+  <for>
+    <init>
+      <var name="i">
+        <number value="0"/>
+      </var>
+    </init>
+    <condition>
+      <binaryoperation operation="&lt;">
+        <left>
+          <identifier name="i"/>
+        </left>
+        <right>
+          <number value="5"/>
+        </right>
+      </binaryoperation>
+    </condition>
+    <post>
+      <postfix operation="++">
+        <identifier name="i"/>
+      </postfix>
+    </post>
+    <statement>
+      <block>
+        <assign operator="=">
+          <left>
+            <identifier name="a"/>
+          </left>
+          <right>
+            <identifier name="i"/>
+          </right>
+        </assign>
+      </block>
+    </statement>
+  </for>
+</program>
+"""
         ),
         (
         r"""
@@ -545,7 +1033,44 @@ def test_schema():
             a = i
         }
         """,
-        ""
+"""
+<program>
+  <for>
+    <init>
+      <var name="i">
+        <number value="0"/>
+      </var>
+    </init>
+    <condition>
+      <binaryoperation operation="&lt;">
+        <left>
+          <identifier name="i"/>
+        </left>
+        <right>
+          <number value="5"/>
+        </right>
+      </binaryoperation>
+    </condition>
+    <post>
+      <postfix operation="++">
+        <identifier name="i"/>
+      </postfix>
+    </post>
+    <statement>
+      <block>
+        <assign operator="=">
+          <left>
+            <identifier name="a"/>
+          </left>
+          <right>
+            <identifier name="i"/>
+          </right>
+        </assign>
+      </block>
+    </statement>
+  </for>
+</program>
+"""
         ),
         (
         r"""
@@ -553,7 +1078,23 @@ def test_schema():
             continue;
         }
         """,
-        ""
+"""
+<program>
+  <forin>
+    <variable>
+      <var name="key"/>
+    </variable>
+    <object>
+      <identifier name="array"/>
+    </object>
+    <statement>
+      <block>
+        <continue/>
+      </block>
+    </statement>
+  </forin>
+</program>
+"""
         ),
         (
         r"""
@@ -561,15 +1102,57 @@ def test_schema():
             break;
         }
         """,
-        ""
+"""
+<program>
+  <for>
+    <statement>
+      <block>
+        <break/>
+      </block>
+    </statement>
+  </for>
+</program>
+"""
         ),
         (
         r"""
         for (; i < len; i++) {
-            text += cars[i] + "<br>";
+            j = i;
         }
         """,
-        ""
+"""
+<program>
+  <for>
+    <condition>
+      <binaryoperation operation="&lt;">
+        <left>
+          <identifier name="i"/>
+        </left>
+        <right>
+          <identifier name="len"/>
+        </right>
+      </binaryoperation>
+    </condition>
+    <post>
+      <postfix operation="++">
+        <identifier name="i"/>
+      </postfix>
+    </post>
+    <statement>
+      <block>
+        <assign operator="=">
+          <left>
+            <identifier name="j"/>
+          </left>
+          <right>
+            <identifier name="i"/>
+          </right>
+        </assign>
+      </block>
+    </statement>
+  </for>
+</program>
+"""
         ),
         (
         r"""
@@ -577,7 +1160,71 @@ def test_schema():
             text += cars[i] + "<br>";
         }
         """,
-        ""
+"""
+<program>
+  <for>
+    <init>
+      <var name="i">
+        <number value="0"/>
+      </var>
+      <var name="len">
+        <dotaccessor>
+          <object>
+            <identifier name="cars"/>
+          </object>
+          <property>
+            <identifier name="length"/>
+          </property>
+        </dotaccessor>
+      </var>
+      <var name="text">
+        <string></string>
+      </var>
+    </init>
+    <condition>
+      <binaryoperation operation="&lt;">
+        <left>
+          <identifier name="i"/>
+        </left>
+        <right>
+          <identifier name="len"/>
+        </right>
+      </binaryoperation>
+    </condition>
+    <post>
+      <postfix operation="++">
+        <identifier name="i"/>
+      </postfix>
+    </post>
+    <statement>
+      <block>
+        <assign operator="+=">
+          <left>
+            <identifier name="text"/>
+          </left>
+          <right>
+            <binaryoperation operation="+">
+              <left>
+                <bracketaccessor>
+                  <object>
+                    <identifier name="cars"/>
+                  </object>
+                  <property>
+                    <identifier name="i"/>
+                  </property>
+                </bracketaccessor>
+              </left>
+              <right>
+                <string>&lt;br&gt;</string>
+              </right>
+            </binaryoperation>
+          </right>
+        </assign>
+      </block>
+    </statement>
+  </for>
+</program>
+"""
         ),
         (
         """
@@ -586,7 +1233,51 @@ def test_schema():
             i++;
         }
         """,
-        ""
+"""
+<program>
+  <for>
+    <condition>
+      <binaryoperation operation="&lt;">
+        <left>
+          <identifier name="i"/>
+        </left>
+        <right>
+          <identifier name="len"/>
+        </right>
+      </binaryoperation>
+    </condition>
+    <statement>
+      <block>
+        <assign operator="+=">
+          <left>
+            <identifier name="text"/>
+          </left>
+          <right>
+            <binaryoperation operation="+">
+              <left>
+                <bracketaccessor>
+                  <object>
+                    <identifier name="cars"/>
+                  </object>
+                  <property>
+                    <identifier name="i"/>
+                  </property>
+                </bracketaccessor>
+              </left>
+              <right>
+                <string>&lt;br&gt;</string>
+              </right>
+            </binaryoperation>
+          </right>
+        </assign>
+        <postfix operation="++">
+          <identifier name="i"/>
+        </postfix>
+      </block>
+    </statement>
+  </for>
+</program>
+"""
         ),
 
         # while loop
@@ -596,7 +1287,34 @@ def test_schema():
            a+=1;
         }
         """,
-        ""
+"""
+<program>
+  <while>
+    <predicate>
+      <binaryoperation operation="&lt;">
+        <left>
+          <identifier name="a"/>
+        </left>
+        <right>
+          <identifier name="b"/>
+        </right>
+      </binaryoperation>
+    </predicate>
+    <statement>
+      <block>
+        <assign operator="+=">
+          <left>
+            <identifier name="a"/>
+          </left>
+          <right>
+            <number value="1"/>
+          </right>
+        </assign>
+      </block>
+    </statement>
+  </while>
+</program>
+"""
         ),
         (
         """
@@ -604,7 +1322,32 @@ def test_schema():
            a+=1;
          } while (a<b);
         """,
-        ""
+"""
+<program>
+  <statement>
+    <block>
+      <assign operator="+=">
+        <left>
+          <identifier name="a"/>
+        </left>
+        <right>
+          <number value="1"/>
+        </right>
+      </assign>
+    </block>
+  </statement>
+  <while>
+    <binaryoperation operation="&lt;">
+      <left>
+        <identifier name="a"/>
+      </left>
+      <right>
+        <identifier name="b"/>
+      </right>
+    </binaryoperation>
+  </while>
+</program>
+"""
         ),
 
         # with
@@ -614,9 +1357,68 @@ def test_schema():
            var a = getElementById('a');
            var b = getElementById('b');
            var c = getElementById('c');
+           var c = document.get('c');
          };
         """,
-        ""
+"""
+<program>
+  <with>
+    <identifier name="document"/>
+    <statement>
+      <block>
+        <var name="a">
+          <functioncall>
+            <function>
+              <identifier name="getElementById"/>
+            </function>
+            <arguments>
+              <string>a</string>
+            </arguments>
+          </functioncall>
+        </var>
+        <var name="b">
+          <functioncall>
+            <function>
+              <identifier name="getElementById"/>
+            </function>
+            <arguments>
+              <string>b</string>
+            </arguments>
+          </functioncall>
+        </var>
+        <var name="c">
+          <functioncall>
+            <function>
+              <identifier name="getElementById"/>
+            </function>
+            <arguments>
+              <string>c</string>
+            </arguments>
+          </functioncall>
+        </var>
+        <var name="c">
+          <functioncall>
+            <function>
+              <dotaccessor>
+                <object>
+                  <identifier name="document"/>
+                </object>
+                <property>
+                  <identifier name="get"/>
+                </property>
+              </dotaccessor>
+            </function>
+            <arguments>
+              <string>c</string>
+            </arguments>
+          </functioncall>
+        </var>
+      </block>
+    </statement>
+  </with>
+  <empty>;</empty>
+</program>
+"""
         ),
 
         # label
@@ -644,7 +1446,190 @@ def test_schema():
             alert('world'); // Will never get here
         }
         """,
-        ""
+"""
+<program>
+  <label name="loop1">
+    <statement>
+      <for>
+        <init>
+          <var name="a">
+            <number value="0"/>
+          </var>
+        </init>
+        <condition>
+          <binaryoperation operation="&lt;">
+            <left>
+              <identifier name="a"/>
+            </left>
+            <right>
+              <number value="10"/>
+            </right>
+          </binaryoperation>
+        </condition>
+        <post>
+          <postfix operation="++">
+            <identifier name="a"/>
+          </postfix>
+        </post>
+        <statement>
+          <block>
+            <if>
+              <predicate>
+                <binaryoperation operation="==">
+                  <left>
+                    <identifier name="a"/>
+                  </left>
+                  <right>
+                    <number value="4"/>
+                  </right>
+                </binaryoperation>
+              </predicate>
+              <then>
+                <block>
+                  <break>
+                    <identifier name="loop1"/>
+                  </break>
+                </block>
+              </then>
+            </if>
+            <functioncall>
+              <function>
+                <identifier name="alert"/>
+              </function>
+              <arguments>
+                <binaryoperation operation="+">
+                  <left>
+                    <string>a = </string>
+                  </left>
+                  <right>
+                    <identifier name="a"/>
+                  </right>
+                </binaryoperation>
+              </arguments>
+            </functioncall>
+            <label name="loop2">
+              <statement>
+                <for>
+                  <init>
+                    <var name="b">
+                      <number value="0"/>
+                    </var>
+                  </init>
+                  <condition>
+                    <binaryoperation operation="&lt;">
+                      <left>
+                        <identifier name="b"/>
+                      </left>
+                      <right>
+                        <number value="10"/>
+                      </right>
+                    </binaryoperation>
+                  </condition>
+                  <post>
+                    <unaryoperation operation="++">
+                      <identifier name="b"/>
+                    </unaryoperation>
+                  </post>
+                  <statement>
+                    <block>
+                      <if>
+                        <predicate>
+                          <binaryoperation operation="==">
+                            <left>
+                              <identifier name="b"/>
+                            </left>
+                            <right>
+                              <number value="3"/>
+                            </right>
+                          </binaryoperation>
+                        </predicate>
+                        <then>
+                          <block>
+                            <continue>
+                              <identifier name="loop2"/>
+                            </continue>
+                          </block>
+                        </then>
+                      </if>
+                      <if>
+                        <predicate>
+                          <binaryoperation operation="==">
+                            <left>
+                              <identifier name="b"/>
+                            </left>
+                            <right>
+                              <number value="6"/>
+                            </right>
+                          </binaryoperation>
+                        </predicate>
+                        <then>
+                          <block>
+                            <continue>
+                              <identifier name="loop1"/>
+                            </continue>
+                          </block>
+                        </then>
+                      </if>
+                      <functioncall>
+                        <function>
+                          <identifier name="alert"/>
+                        </function>
+                        <arguments>
+                          <binaryoperation operation="+">
+                            <left>
+                              <string>b = </string>
+                            </left>
+                            <right>
+                              <identifier name="b"/>
+                            </right>
+                          </binaryoperation>
+                        </arguments>
+                      </functioncall>
+                    </block>
+                  </statement>
+                </for>
+              </statement>
+            </label>
+            <functioncall>
+              <function>
+                <identifier name="alert"/>
+              </function>
+              <arguments>
+                <string>finished</string>
+              </arguments>
+            </functioncall>
+          </block>
+        </statement>
+      </for>
+    </statement>
+  </label>
+  <label name="block1">
+    <statement>
+      <block>
+        <functioncall>
+          <function>
+            <identifier name="alert"/>
+          </function>
+          <arguments>
+            <string>hello</string>
+          </arguments>
+        </functioncall>
+        <break>
+          <identifier name="block1"/>
+        </break>
+        <functioncall>
+          <function>
+            <identifier name="alert"/>
+          </function>
+          <arguments>
+            <string>world</string>
+          </arguments>
+        </functioncall>
+      </block>
+    </statement>
+  </label>
+</program>
+"""
         ),
 
         # functions
@@ -654,7 +1639,25 @@ def test_schema():
             p = "bar";
         }
         """,
-        ""
+"""
+<program>
+  <funcdecl name="foo">
+    <parameters>
+      <identifier name="p"/>
+    </parameters>
+    <body>
+      <assign operator="=">
+        <left>
+          <identifier name="p"/>
+        </left>
+        <right>
+          <string>bar</string>
+        </right>
+      </assign>
+    </body>
+  </funcdecl>
+</program>
+"""
         ),
         (
         """
@@ -662,7 +1665,23 @@ def test_schema():
             alert('world');
         }
         """,
-        ""
+"""
+<program>
+  <funcdecl name="hello">
+    <parameters/>
+    <body>
+      <functioncall>
+        <function>
+          <identifier name="alert"/>
+        </function>
+        <arguments>
+          <string>world</string>
+        </arguments>
+      </functioncall>
+    </body>
+  </funcdecl>
+</program>
+"""
         ),
         (
         """
@@ -670,13 +1689,41 @@ def test_schema():
             alert('I am anonymous');
         };
         """,
-        ""
+"""
+<program>
+  <var name="anon">
+    <funcexpr>
+      <identifier/>
+      <parameters/>
+      <body>
+        <functioncall>
+          <function>
+            <identifier name="alert"/>
+          </function>
+          <arguments>
+            <string>I am anonymous</string>
+          </arguments>
+        </functioncall>
+      </body>
+    </funcexpr>
+  </var>
+</program>
+"""
         ),
         (
         """
         anon();
         """,
-        ""
+"""
+<program>
+  <functioncall>
+    <function>
+      <identifier name="anon"/>
+    </function>
+    <arguments/>
+  </functioncall>
+</program>
+"""
         ),
         (
         """
@@ -684,7 +1731,32 @@ def test_schema():
             alert('hello');
         }, 1000)
         """,
-        ""
+"""
+<program>
+  <functioncall>
+    <function>
+      <identifier name="setTimeout"/>
+    </function>
+    <arguments>
+      <funcexpr>
+        <identifier/>
+        <parameters/>
+        <body>
+          <functioncall>
+            <function>
+              <identifier name="alert"/>
+            </function>
+            <arguments>
+              <string>hello</string>
+            </arguments>
+          </functioncall>
+        </body>
+      </funcexpr>
+      <number value="1000"/>
+    </arguments>
+  </functioncall>
+</program>
+"""
         ),
         (
         """
@@ -692,7 +1764,29 @@ def test_schema():
             alert('foo');
         }());
         """,
-        ""
+"""
+<program>
+  <functioncall>
+    <function>
+      <funcexpr>
+        <identifier/>
+        <parameters/>
+        <body>
+          <functioncall>
+            <function>
+              <identifier name="alert"/>
+            </function>
+            <arguments>
+              <string>foo</string>
+            </arguments>
+          </functioncall>
+        </body>
+      </funcexpr>
+    </function>
+    <arguments/>
+  </functioncall>
+</program>
+"""
         ),
 
         # get/set
@@ -704,13 +1798,43 @@ def test_schema():
           }
         }
         """,
-        ""
+"""
+<program>
+  <var name="obj">
+    <object>
+      <get>
+        <property>
+          <identifier name="latest"/>
+        </property>
+        <body>
+          <return>
+            <string>latest</string>
+          </return>
+        </body>
+      </get>
+    </object>
+  </var>
+</program>
+"""
         ),
         (
         """
         delete obj.latest;
         """,
-        ""
+"""
+<program>
+  <unaryoperation operation="delete">
+    <dotaccessor>
+      <object>
+        <identifier name="obj"/>
+      </object>
+      <property>
+        <identifier name="latest"/>
+      </property>
+    </dotaccessor>
+  </unaryoperation>
+</program>
+"""
         ),
         (
         """
@@ -721,12 +1845,65 @@ def test_schema():
           log: []
         }
         """,
-        ""
+"""
+<program>
+  <var name="o">
+    <object>
+      <set>
+        <body>
+          <return>
+            <assign operator="=">
+              <left>
+                <bracketaccessor>
+                  <object>
+                    <dotaccessor>
+                      <object>
+                        <identifier>this</identifier>
+                      </object>
+                      <property>
+                        <identifier name="log"/>
+                      </property>
+                    </dotaccessor>
+                  </object>
+                  <property>
+                    <dotaccessor>
+                      <object>
+                        <dotaccessor>
+                          <object>
+                            <identifier>this</identifier>
+                          </object>
+                          <property>
+                            <identifier name="log"/>
+                          </property>
+                        </dotaccessor>
+                      </object>
+                      <property>
+                        <identifier name="length"/>
+                      </property>
+                    </dotaccessor>
+                  </property>
+                </bracketaccessor>
+              </left>
+              <right>
+                <identifier name="str"/>
+              </right>
+            </assign>
+          </return>
+        </body>
+      </set>
+      <property name="log">
+        <array/>
+      </property>
+    </object>
+  </var>
+</program>
+"""
         ),
 
     ]
 
     for snippet, expected in jscode_snippets:
+        print "---------------------------------------------------------"
         print snippet
         js = js2xml.parse(snippet)
         output = js2xml.pretty_print(js).strip()

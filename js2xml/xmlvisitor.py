@@ -131,7 +131,7 @@ class XmlVisitor(object):
         if node.alternative is not None:
             elseel = ET.Element("else")
             elseel.extend(self.visit(node.alternative))
-            ifel.extend(elseel)
+            ifel.append(elseel)
 
         return [ifel]
 
@@ -178,6 +178,10 @@ class XmlVisitor(object):
         forel.append(variable)
         forel.append(objel)
 
+        statement = E.statement()
+        statement.extend(self.visit(node.statement))
+        forel.append(statement)
+
         return [forel]
 
     def visit_BinOp(self, node):
@@ -190,13 +194,13 @@ class XmlVisitor(object):
         return [binop]
 
     def visit_UnaryOp(self, node):
-        unary = E.unaryoperation()
+
         if node.postfix:
-            unary.extend(self.visit(node.value))
-            operator = E.operator(self.visit(node.op))
-            unary.append(operator)
+            postfix = E.postfix(operation=node.op)
+            postfix.extend(self.visit(node.value))
+            return [postfix]
         elif node.op in ('delete', 'void', 'typeof'):
-            unary.append(E.operation(node.op))
+            unary = E.unaryoperation(operation=node.op)
             unary.extend(self.visit(node.value))
         else:
             # convert things like "+3.14" and "-22"
@@ -204,7 +208,7 @@ class XmlVisitor(object):
                 node.value.value = "%s%s" % (node.op, node.value.value)
                 return self.visit(node.value)
             else:
-                unary.append(E.operation(node.op))
+                unary = E.unaryoperation(operation=node.op)
                 unary.extend(self.visit(node.value))
         return [unary]
 
