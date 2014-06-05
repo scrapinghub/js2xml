@@ -1,6 +1,7 @@
 import lxml.etree
 from js2xml.parser import CustomParser as Parser
 from js2xml.xmlvisitor import XmlVisitor
+import js2xml.jsonlike as jsonlike
 
 _parser = Parser()
 _visitor = XmlVisitor()
