@@ -110,6 +110,35 @@ bar";
         """.encode("utf8"),
         [u'\u00a9 Netscape Communications']
         ),
+        # a real example
+        (
+        r"""
+        var needleParam = needleParam || {};
+        needleParam.chatGroup = "test";
+        needleParam.productId = "6341292";
+        needleParam.productPrice = "EUR              138.53".replace("$","n_").replace(/,/g,"");
+        //Begin Needle (fan-sourcing platform) snippet
+        jQuery(document).ready(function(){
+
+        var e = document.createElement("script"); e.type = "text/javascript";
+        e.async = true;
+        e.src = document.location.protocol +
+
+        "//overstock.needle.com/needle_service.js?1"; document.body.appendChild(e);
+
+        });
+        // End Needle snippet
+        """,
+        ['test',
+         '6341292',
+         'EUR              138.53',
+         '$',
+         'n_',
+         '',
+         'script',
+         'text/javascript',
+         '//overstock.needle.com/needle_service.js?1']
+        ),
     ]
 
     for snippet, expected in jscode_snippets:
