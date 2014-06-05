@@ -158,3 +158,32 @@ def test_findall():
         for r in js.xpath(xp):
             results.extend(js2xml.jsonlike.findall(r))
         assert_list_equal([js2xml.jsonlike.make_dict(r) for r in results], expected)
+
+
+def test_getall_complex():
+    jscode_snippets = [
+        (
+            r"""
+var needleParam = needleParam || {};
+needleParam.chatGroup = "test";
+needleParam.productId = "6341292";
+needleParam.productPrice = "EUR              138.53".replace("$","n_").replace(/,/g,"");
+//Begin Needle (fan-sourcing platform) snippet
+jQuery(document).ready(function(){
+
+var e = document.createElement("script"); e.type = "text/javascript";
+e.async = true;
+e.src = document.location.protocol +
+
+"//overstock.needle.com/needle_service.js?1"; document.body.appendChild(e);
+
+});
+// End Needle snippet
+""",
+            [],
+        ),
+    ]
+
+    for snippet, expected in jscode_snippets:
+        jsxml = js2xml.parse(snippet)
+        assert_list_equal(js2xml.jsonlike.getall(jsxml), expected)
