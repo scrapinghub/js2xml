@@ -5,7 +5,10 @@ from lxml.builder import E
 import lxml.etree as ET
 
 
+invalid_unicode_re = re.compile(u"""[\u0001-\u0008]""", re.U)
+
 def unescape_string(input_string):
+    input_string = invalid_unicode_re.sub(u"\ufffd", input_string)
     return input_string.replace(r'\/', '/')
 
 
@@ -13,11 +16,6 @@ class XmlVisitor(object):
 
     def visit(self, node):
         method = 'visit_%s' % node.__class__.__name__
-        #print method, node,
-        #try:
-            #print node.value
-        #except:
-            #print
         return getattr(self, method, self.generic_visit)(node)
 
     def generic_visit(self, node):

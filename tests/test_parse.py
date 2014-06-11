@@ -139,6 +139,13 @@ bar";
          'text/javascript',
          '//overstock.needle.com/needle_service.js?1']
         ),
+        # test replacing some control characters
+        (
+        r"""
+        var name = "\u13e9\u0352\u0362\u044f\u2778\u00b3\u1d43\u034e\u034e\u0442\u035b\u13b7\u0362\u033b\u1d51A\u0362\u13de\u0001\u0001\u277c00b";
+        """,
+        [u'\u13e9\u0352\u0362\u044f\u2778\xb3\u1d43\u034e\u034e\u0442\u035b\u13b7\u0362\u033b\u1d51A\u0362\u13de\ufffd\ufffd\u277c00b']
+        ),
     ]
 
     for snippet, expected in jscode_snippets:
