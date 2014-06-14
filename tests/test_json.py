@@ -180,7 +180,7 @@ e.src = document.location.protocol +
 });
 // End Needle snippet
 """,
-            [],
+            [{}],
         ),
     ]
 

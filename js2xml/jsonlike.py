@@ -25,7 +25,7 @@ def make_dict(tree):
         return None
 
 _jsonlike_elements = """
-       self::object[property]
+       self::object[property or not(node())]
     or self::array
     or self::property[@name]
     or self::identifier[parent::property]
@@ -36,7 +36,7 @@ _jsonlike_elements = """
     or self::undefined
     """
 _jsonlike_xpath = """
-    (self::object[property] or self::array)
+    (self::object[property or not(node())] or self::array)
     and
     not(./descendant::*[not(%(elements)s)])
 """ % {"elements": _jsonlike_elements}
@@ -44,7 +44,7 @@ _jsonlike_xpath = """
 _xp_jsonlike = lxml.etree.XPath(_jsonlike_xpath)
 
 _alljsonlike_xpath = """
-    ./descendant-or-self::*[self::object[property] or self::array]
+    ./descendant-or-self::*[self::object[property or not(node())] or self::array]
                            [not(./descendant::*[not(%(elements)s)])]
 """ % {"elements": _jsonlike_elements}
 _xp_alljsonlike = lxml.etree.XPath(_alljsonlike_xpath)
@@ -70,3 +70,12 @@ def findall(tree):
 
 def getall(tree):
     return [make_dict(obj) for obj in findall(tree)]
+
+_nonjsonlike_xpath = """
+    ./descendant-or-self::*[not(%(elements)s)]
+""" % {"elements": _jsonlike_elements}
+
+_xp_nonjsonlike = lxml.etree.XPath(_nonjsonlike_xpath)
+# to help debugging
+def getall_nonjsonlike(subtree):
+    return _xp_nonjsonlike(subtree)
