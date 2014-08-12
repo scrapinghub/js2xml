@@ -256,6 +256,10 @@ def test_syntax():
         }
         """,
 
+        # new
+
+        """var mycar = new car("Eagle", "Talon TSi", 1993);""",
+
     ]
 
     for snippet in jscode_snippets:

@@ -5,7 +5,7 @@ from lxml.builder import E
 import lxml.etree as ET
 
 
-invalid_unicode_re = re.compile(u"""[\u0001-\u0008]""", re.U)
+invalid_unicode_re = re.compile(u"""[\u0001-\u0008\u000b\u000e-\u001f\u007f]""", re.U)
 
 def unescape_string(input_string):
     input_string = invalid_unicode_re.sub(u"\ufffd", input_string)
@@ -394,7 +394,7 @@ class XmlVisitor(object):
 
     def visit_NewExpr(self, node):
         newel = E.new()
-        newel.append(self.visit(node.identifier))
+        newel.extend(self.visit(node.identifier))
         arguments = E.arguments()
         for arg in node.args:
             arguments.extend(self.visit(arg))
