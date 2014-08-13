@@ -36,7 +36,8 @@ def test_syntax():
         "o = {'c': 1, 'd': 2};",
         'o = {"c": 1, "d": 2};',
         'o = {"c": 1, d: "e"};',
-        "e = {foo: 5, bar: 6, baz: ['Baz', 'Content']};"
+        "e = {foo: 5, bar: 6, baz: ['Baz', 'Content']};",
+        "e = {1: a, 2: b};",
 
         # other primitive data types
         "null;",
