@@ -60,8 +60,10 @@ class XmlVisitor(object):
                 propel = E.property(name=propname.text)
             elif isinstance(node.left, ast.Identifier):
                 propel = E.property(name=propname.get("name"))
+            elif isinstance(node.left, ast.Number):
+                propel = E.property(name=propname.get("value"))
             else:
-                print type(propname)
+                print type(node.left), type(propname)
                 raise RuntimeError
 
             propel.extend(self.visit(node.right))
