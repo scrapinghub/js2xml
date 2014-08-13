@@ -36,4 +36,5 @@ bits in Javascript instructions (strings, IDs, function parameters...)
         'Intended Audience :: Developers',
      ],
      url = 'https://github.com/redapple/js2xml',
+     download_url = 'https://github.com/redapple/js2xml/tarball/0.1',
 )
