@@ -331,7 +331,8 @@ class XmlVisitor(object):
         return [tryel]
 
     def visit_Catch(self, node):
-        expression = E.expression(self.visit(node.identifier))
+        expression = E.expression()
+        expression.extend(self.visit(node.identifier))
         body = E.body()
         body.extend(self.visit(node.elements))
         return [E.catch(expression, body)]
@@ -361,7 +362,7 @@ class XmlVisitor(object):
     def visit_FuncExpr(self, node):
         funcexpr = E.funcexpr()
         if node.identifier is not None:
-            funcexpr.append(self.visit(node.identifier))
+            funcexpr.extend(self.visit(node.identifier))
         else:
             funcexpr.append(E.identifier())
         parameters = E.parameters()

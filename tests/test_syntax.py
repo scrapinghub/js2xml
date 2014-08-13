@@ -219,6 +219,20 @@ def test_syntax():
         }
         """,
         """
+        var x = function(y) {
+           return y * y;
+        };
+        """,
+        """
+        var math = {
+          'factorial': function factorial(n) {
+            if (n <= 1)
+              return 1;
+            return n * factorial(n - 1);
+          }
+        };
+        """,
+        """
         var anon = function() {
             alert('I am anonymous');
         };
@@ -258,9 +272,55 @@ def test_syntax():
         """,
 
         # new
-
         """var mycar = new car("Eagle", "Talon TSi", 1993);""",
 
+        # try / catch
+        """
+        try {
+           throw "myException"; // generates an exception
+        }
+        catch (e) {
+           // statements to handle any exceptions
+           logMyErrors(e); // pass exception object to error handler
+        }
+        """,
+
+        """
+        try {
+            addalert("bad call");
+        }
+        catch(e) {
+            document.write ("Error Message: " + e.message);
+            document.write ("<br />");
+            document.write ("Error Code: ");
+            document.write (e.number & 0xFFFF);
+            document.write ("<br />");
+            document.write ("Error Name: " + e.name);
+        }
+        """,
+        """
+        try {
+            document.write("Outer try running...<br/>");
+
+            try {
+                document.write("Nested try running...<br/>");
+                throw new Error(301, "an error");
+            }
+            catch (e) {
+                document.write ("Nested catch caught " + e.message + "<br/>");
+                throw e;
+            }
+            finally {
+                document.write ("Nested finally is running...<br/>");
+            }
+        }
+        catch (e) {
+            document.write ("Outer catch caught " + e.message + "<br/>");
+        }
+        finally {
+            document.write ("Outer finally running");
+        }
+        """,
     ]
 
     for snippet in jscode_snippets:
