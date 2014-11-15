@@ -3,9 +3,20 @@ js2xml
 
 [![Build Status](https://travis-ci.org/redapple/js2xml.png?branch=master)](https://travis-ci.org/redapple/js2xml)
 
-Convert Javascript code to an XML document
+Convert Javascript code to an XML document.
 
-Example:
+This makes it easy to extract data embedded in JavaScript code using XPath
+in a way more robust than just using regular expressions.
+
+
+# Install:
+
+You can install js2xml via [PyPI](https://pypi.python.org/pypi/js2xml):
+
+    pip install js2xml
+
+
+# Example:
 
 ```python
 >>> import js2xml
@@ -18,53 +29,52 @@ Example:
 ... }"""
 >>> parsed = js2xml.parse(jscode)
 >>>
->>> print js2xml.pretty_print(parsed)
+>>> parsed.xpath("//funcdecl/@name")  # extracts function name
+['factorial']
+>>>
+>>> print js2xml.pretty_print(parsed)  # pretty-print generated XML
 <program>
-  <funcdecl>
-    <identifier>factorial</identifier>
+  <funcdecl name="factorial">
     <parameters>
-      <identifier>n</identifier>
+      <identifier name="n"/>
     </parameters>
     <body>
       <if>
         <predicate>
-          <binaryoperation>
+          <binaryoperation operation="===">
             <left>
-              <identifier>n</identifier>
+              <identifier name="n"/>
             </left>
-            <operator>===</operator>
             <right>
-              <number>0</number>
+              <number value="0"/>
             </right>
           </binaryoperation>
         </predicate>
         <then>
           <block>
             <return>
-              <number>1</number>
+              <number value="1"/>
             </return>
           </block>
         </then>
       </if>
       <return>
-        <binaryoperation>
+        <binaryoperation operation="*">
           <left>
-            <identifier>n</identifier>
+            <identifier name="n"/>
           </left>
-          <operator>*</operator>
           <right>
             <functioncall>
-              <identifier>
-                <identifier>factorial</identifier>
-              </identifier>
+              <function>
+                <identifier name="factorial"/>
+              </function>
               <arguments>
-                <binaryoperation>
+                <binaryoperation operation="-">
                   <left>
-                    <identifier>n</identifier>
+                    <identifier name="n"/>
                   </left>
-                  <operator>-</operator>
                   <right>
-                    <number>1</number>
+                    <number value="1"/>
                   </right>
                 </binaryoperation>
               </arguments>
