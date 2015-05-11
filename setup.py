@@ -3,7 +3,7 @@
 from setuptools import setup
 
 setup(name='js2xml',
-      version='0.1.1',
+      version='0.1.2',
       description='Convert Javascript code to XML document',
       long_description="""
 ======
@@ -36,5 +36,5 @@ bits in Javascript instructions (strings, IDs, function parameters...)
         'Intended Audience :: Developers',
      ],
      url = 'https://github.com/redapple/js2xml',
-     download_url = 'https://github.com/redapple/js2xml/tarball/0.1.1',
+     download_url = 'https://github.com/redapple/js2xml/tarball/0.1.2',
 )
