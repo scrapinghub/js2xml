@@ -1,16 +1,19 @@
 import ply.yacc
 from slimit.parser import Parser
 from js2xml.lexer import CustomLexer as Lexer
+from js2xml.log import logger
 
 try:
     from js2xml import lextab, yacctab
 except ImportError:
     lextab, yacctab = 'lextab', 'yacctab'
 
+
 class CustomParser(Parser):
 
     def __init__(self, lex_optimize=True, lextab=lextab,
-                 yacc_optimize=True, yacctab=yacctab, yacc_debug=False):
+                 yacc_optimize=True, yacctab=yacctab, yacc_debug=False,
+                 logger=logger):
         self.lex_optimize = lex_optimize
         self.lextab = lextab
         self.yacc_optimize = yacc_optimize
@@ -26,9 +29,11 @@ class CustomParser(Parser):
             optimize=yacc_optimize,
             debug=yacc_debug,
             tabmodule=yacctab,
-            start='program')
+            start='program',
+            errorlog=logger)
 
         self._error_tokens = {}
+
 
     def parse(self, text, debug=False):
         result = super(CustomParser, self).parse(text, debug=debug)
