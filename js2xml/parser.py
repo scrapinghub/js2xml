@@ -3,10 +3,7 @@ from slimit.parser import Parser
 from js2xml.lexer import CustomLexer as Lexer
 from js2xml.log import logger
 
-try:
-    from js2xml import lextab, yacctab
-except ImportError:
-    lextab, yacctab = 'lextab', 'yacctab'
+lextab, yacctab = 'lextab', 'yacctab'
 
 
 class CustomParser(Parser):

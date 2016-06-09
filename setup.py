@@ -24,6 +24,7 @@ bits in Javascript instructions (strings, IDs, function parameters...)
       install_requires=[
         "slimit",
         "lxml",
+        "six"
       ],
       classifiers = [
         'Topic :: Software Development :: Libraries :: Python Modules',

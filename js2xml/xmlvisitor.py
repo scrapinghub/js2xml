@@ -1,5 +1,7 @@
 import ast as pyast
 import re
+
+import six
 from slimit import ast
 from lxml.builder import E
 import lxml.etree as ET
@@ -46,7 +48,7 @@ class XmlVisitor(object):
     def visit_Identifier(self, node):
         if isinstance(node.value, (int, float)):
             return [E.identifier(node.value)]
-        elif isinstance(node.value, (str, unicode)):
+        elif isinstance(node.value, six.string_types):
             if node.value == "undefined":
                 return [E.undefined()]
             idel = E.identifier()
@@ -63,7 +65,7 @@ class XmlVisitor(object):
             elif isinstance(node.left, ast.Number):
                 propel = E.property(name=propname.get("value"))
             else:
-                print type(node.left), type(propname)
+                print(type(node.left), type(propname))
                 raise RuntimeError
 
             propel.extend(self.visit(node.right))
@@ -248,7 +250,7 @@ class XmlVisitor(object):
         return node
 
     def visit_String(self, node):
-        str_value = pyast.literal_eval("u"+node.value.decode("utf8"))
+        str_value = pyast.literal_eval("u"+node.value)
         return [E.string(unescape_string(str_value))]
 
     def visit_Continue(self, node):

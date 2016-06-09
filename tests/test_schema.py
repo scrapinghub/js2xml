@@ -1903,8 +1903,8 @@ def test_schema():
     ]
 
     for snippet, expected in jscode_snippets:
-        print "---------------------------------------------------------"
-        print snippet
+        print("---------------------------------------------------------")
+        print(snippet)
         js = js2xml.parse(snippet)
         output = js2xml.pretty_print(js).strip()
         assert_equal(output, expected.strip(), "got\n%s\nexpected:\n%s" % (output, expected))

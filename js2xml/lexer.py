@@ -410,6 +410,6 @@ class CustomLexer(object):
         return token
 
     def t_error(self, token):
-        print 'Illegal character %r at %s:%s after %s' % (
-            token.value[0], token.lineno, token.lexpos, self.prev_token)
+        print('Illegal character %r at %s:%s after %s' % (
+            token.value[0], token.lineno, token.lexpos, self.prev_token))
         token.lexer.skip(1)
