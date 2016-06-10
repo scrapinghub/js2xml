@@ -90,3 +90,30 @@ You can install js2xml via [PyPI](https://pypi.python.org/pypi/js2xml):
 
 
 ```
+
+
+# Changelog
+
+## v0.2.0 (2016-06-10)
+
+- Python 3 support (tested with 3.4 and 3.5)
+- Use logger to suppress Yacc warnings
+- require PLY > 3.6
+- Use bumpversion for versioning
+- Pretty-print output is now a Unicode string
+
+## v0.1.2 (2015-05-11)
+
+- Profiling scripts added
+- Updated notes with use-case, installing via pip
+- Force PLY 3.4 (3.6 has issues with slimit)
+
+## v0.1.1 (2014-08-13)
+
+- Fix parsing of objects with integer keys
+- Fix try/catch/finally and named function expressions
+- Add download URL in setup file (for PyPI)
+
+## v0.1 (2014-08-12)
+
+Initial release
