@@ -6,7 +6,7 @@ from .xmlvisitor import XmlVisitor
 from .jsonlike import *
 
 
-__version__ = "0.1.2"
+__version__ = "0.2.0"
 
 _parser = Parser()
 _visitor = XmlVisitor()
