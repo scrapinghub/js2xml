@@ -3,6 +3,8 @@ from js2xml.parser import CustomParser as Parser
 from js2xml.xmlvisitor import XmlVisitor
 import js2xml.jsonlike as jsonlike
 
+__version__ = "0.1.2"
+
 _parser = Parser()
 _visitor = XmlVisitor()
 
