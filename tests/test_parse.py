@@ -99,16 +99,18 @@ bar";
         """, [r'foo bar', 'foo                  bar']
         ),
         (
-        r"""
-        var x = "\u00A9 Netscape Communications";
+        # testing Unicode literals
+        b"""
+        var x = "\\u00A9 Netscape Communications 1";
         """,
-        [ur'\u00a9 Netscape Communications']
+        [u'\u00a9 Netscape Communications 1']
         ),
         (
+        # testing Unicode characters
         u"""
-        var x = "\u00A9 Netscape Communications";
+        var x = "\u00A9 Netscape Communications 2";
         """.encode("utf8"),
-        [u'\u00a9 Netscape Communications']
+        [u'\u00a9 Netscape Communications 2']
         ),
         # a real example
         (
