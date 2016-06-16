@@ -37,6 +37,6 @@ bits in Javascript instructions (strings, IDs, function parameters...)
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
      ],
-     url = 'https://github.com/redapple/js2xml',
-     download_url = 'https://github.com/redapple/js2xml/archive/v0.2.1.tar.gz',
+     url = 'https://github.com/scrapinghub/js2xml',
+     download_url = 'https://github.com/scrapinghub/js2xml/archive/v0.2.1.tar.gz',
 )
