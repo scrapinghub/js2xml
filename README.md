@@ -2,6 +2,7 @@ js2xml
 ======
 
 [![Build Status](https://travis-ci.org/scrapinghub/js2xml.png?branch=master)](https://travis-ci.org/scrapinghub/js2xml)
+[![codecov](https://codecov.io/gh/scrapinghub/js2xml/branch/master/graph/badge.svg)](https://codecov.io/gh/scrapinghub/js2xml)
 
 Convert Javascript code to an XML document.
 
