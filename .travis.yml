@@ -3,7 +3,13 @@ python:
     - "2.7"
     - "3.4"
     - "3.5"
-install:
-    - pip install -r requirements.txt --use-mirrors
-script: nosetests tests
 
+install:
+    - pip install -r requirements.txt
+    - pip install codecov
+
+after_success:
+    - codecov
+
+script:
+    nosetests --with-coverage --cover-package=js2xml tests
