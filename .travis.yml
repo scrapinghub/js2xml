@@ -1,18 +1,29 @@
 sudo: false
+
 language: python
 python:
-    - "2.7"
-    - "3.4"
-    - "3.5"
-    - "3.6-dev"
+  - '2.7'
+  - '3.4'
+  - '3.5'
+  - '3.6-dev'
 
 install:
-    - pip install tox-travis
-    - pip install -r requirements.txt
-    - pip install codecov
+  - pip install tox-travis
+  - pip install -r requirements.txt
+  - pip install codecov
 
 after_success:
-    - codecov
+  - codecov
 
-script:
-    tox
+script: tox
+
+deploy:
+  provider: pypi
+  distributions: sdist bdist_wheel
+  user: redapple
+  password:
+    secure: fxvfv8mDt6SBoDQ6yaK8ceKEJm2e3k60RXzFUGjRQfaoWZNpzfzB3ETQmBWDMnX0JN+9jmr0X+gbIn8XgfL4gzc+d2XXauJ7S+Yw/Tnon/PlzbMaiOZgftyJqZT+ARebHtNooubglsJ1a/fEQlnxKDjdttJ1bgQhp5gVXAmAtT4=
+  on:
+    tags: true
+    repo: scrapinghub/js2xml
+    condition: $TRAVIS_PYTHON_VERSION = '3.5'
