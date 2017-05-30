@@ -8,7 +8,7 @@ lextab, yacctab = 'lextab', 'yacctab'
 
 class CustomParser(Parser):
 
-    def __init__(self, lex_optimize=True, lextab=lextab,
+    def __init__(self, lex_optimize=False, lextab=lextab,
                  yacc_optimize=True, yacctab=yacctab, yacc_debug=False,
                  logger=logger):
         self.lex_optimize = lex_optimize
@@ -23,6 +23,7 @@ class CustomParser(Parser):
 
         self.parser = ply.yacc.yacc(
             module=self,
+            write_tables=False,
             optimize=yacc_optimize,
             debug=yacc_debug,
             tabmodule=yacctab,
