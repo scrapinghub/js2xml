@@ -95,6 +95,11 @@ You can install js2xml via [PyPI](https://pypi.python.org/pypi/js2xml):
 
 # Changelog
 
+## v0.2.3 (2017-05-30)
+
+- Regenerate lextab.py and yacctab.py files with PLY 3.10
+- Properly set logger level to ERROR
+
 ## v0.2.2 (2016-12-01)
 
 - Include lextab.py and yacctab.py files to (hopefully) remove write
