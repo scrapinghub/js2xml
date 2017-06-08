@@ -1,9 +1,9 @@
 from lxml.etree import XPath
 
 
-# base built-in objects (e.g. not functions definitions within Objects or Arrays
+# base built-in objects (e.g. not functions definitions within Objects or Arrays)
 _elements = [
-    'object[property or not(node())]',  # an Object with a property, or empty
+    'object[property or not(node())]',  # an Object with a property, or an empty Object
     'array',
     'property[@name]',
     'identifier[parent::property]',
@@ -37,7 +37,7 @@ def is_instance_xpath(types):
         not(./descendant::*[not(
             {elements}
     )])'''.format(
-        mapped=' or '.join('self::{}'.format(el) for el in _tags),
+        mapped=one_of_xpath(_tags),
         elements=one_of_xpath(_elements))
     return xp
 
