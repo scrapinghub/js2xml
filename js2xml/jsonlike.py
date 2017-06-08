@@ -1,7 +1,5 @@
 from functools import partial
 
-from lxml.etree import XPath
-
 from js2xml.utils.objects import findall, getall, is_instance, make
 
 
