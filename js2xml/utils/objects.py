@@ -1,36 +1,51 @@
 from lxml.etree import XPath
 
 
-_jsobject = """
-       self::object[property or not(node())]
-    or self::array
-    or self::property[@name]
-    or self::identifier[parent::property]
-    or self::string
-    or self::number
-    or self::boolean
-    or self::null
-    or self::undefined
-    """
-_jsobject_xpath = """
-    (self::object[property or not(node())] or self::array)
-    and
-    not(./descendant::*[not(%(elements)s)])
-""" % {"elements": _jsobject}
+# base built-in objects (e.g. not functions definitions within Objects or Arrays
+_elements = [
+    'object[property or not(node())]',  # an Object with a property, or empty
+    'array',
+    'property[@name]',
+    'identifier[parent::property]',
+    'string',
+    'number',
+    'boolean',
+    'null',
+    'undefined',
+]
 
-_xp_jsobject = XPath(_jsobject_xpath)
+_tagmap = {
+    list: ['array'],
+    dict: ['object[property or not(node())]'],
+    str: ['string'],
+    int: ['number'],
+    float: ['number'],
+    bool: ['boolean'],
+    None: ['null', 'undefined'],
+}
 
-_alljsobjects_xpath = """
-    ./descendant-or-self::*[self::object[property or not(node())] or self::array]
-                           [not(./descendant::*[not(%(elements)s)])]
-""" % {"elements": _jsobject}
-_xp_alljsobjects = XPath(_alljsobjects_xpath)
 
-_nonjsobjects_xpath = """
-    ./descendant-or-self::*[not(%(elements)s)]
-""" % {"elements": _jsobject}
+def one_of_xpath(elements):
+    return ' or '.join('self::{}'.format(el) for el in elements)
 
-_xp_nonjsobjects = XPath(_nonjsobjects_xpath)
+
+def is_instance_xpath(types):
+    _tags = {m for t in types for m in _tagmap[t]}
+    xp = '''
+        ({mapped})
+        and
+        not(./descendant::*[not(
+            {elements}
+    )])'''.format(
+        mapped=' or '.join('self::{}'.format(el) for el in _tags),
+        elements=one_of_xpath(_elements))
+    return xp
+
+def _xp_all_of(types):
+    xp = is_instance_xpath(types)
+    return XPath('''./descendant-or-self::*[
+        {predicate}
+    ]'''.format(predicate=xp))
 
 
 def make(tree):
@@ -57,12 +72,10 @@ def make(tree):
         return None
 
 
-def is_object(subtree):
-    return _xp_jsobject(subtree)
-
-
-def findall(tree):
-    candidates = _xp_alljsobjects(tree)
+def findall(tree, types=None):
+    if types is None:
+        types = (dict, list)
+    candidates = _xp_all_of(types)(tree)
     out = []
     if candidates is not None:
         test_set = set(candidates)
@@ -75,10 +88,11 @@ def findall(tree):
     return out
 
 
-def getall(tree):
-    return [make(obj) for obj in findall(tree)]
+def getall(tree, types=None):
+    return [make(obj) for obj in findall(tree, types=types)]
 
 
-# to help debugging
-def getall_nonjsobjects(subtree):
-    return _xp_nonjsobjects(subtree)
+def is_instance(tree, types=None):
+    if types is None:
+        types = (dict, list)
+    return XPath(is_instance_xpath(types))(tree)

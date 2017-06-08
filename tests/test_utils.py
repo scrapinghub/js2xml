@@ -127,7 +127,7 @@ def test_json():
     ]
     for snippet, expected in jscode_snippets:
         jsxml = js2xml.parse(snippet)
-        assert_list_equal(getall(jsxml), expected)
+        assert_list_equal(getall(jsxml, types=[dict, list]), expected)
 
 
 def test_findall():
@@ -138,6 +138,7 @@ def test_findall():
             var arr2 = ["d","e","f"];
             """,
             '//array',
+            [dict, list],
             [['a', 'b', 'c'],
              ['d', 'e', 'f']]
         ),
@@ -147,16 +148,17 @@ def test_findall():
             var arr2 = {"e": 1, "f": 2};
             """,
             '//object',
+            [dict, list],
             [{'a': 'b', 'c': 'd'},
              {'e': 1, 'f': 2}]
         ),
     ]
 
-    for snippet, xp, expected in jscode_snippets:
+    for snippet, xp, types, expected in jscode_snippets:
         js = js2xml.parse(snippet)
         results = []
         for r in js.xpath(xp):
-            results.extend(findall(r))
+            results.extend(findall(r, types=types))
         assert_list_equal([make(r) for r in results], expected)
 
 
@@ -180,10 +182,61 @@ e.src = document.location.protocol +
 });
 // End Needle snippet
 """,
+            [dict, list],
             [{}],
+        ),
+        (
+            r"""
+var needleParam = needleParam || {};
+needleParam.chatGroup = "test";
+needleParam.productId = "6341292";
+needleParam.productPrice = "EUR              138.53".replace("$","n_").replace(/,/g,"");
+//Begin Needle (fan-sourcing platform) snippet
+jQuery(document).ready(function(){
+
+var e = document.createElement("script"); e.type = "text/javascript";
+e.async = true;
+e.src = document.location.protocol +
+
+"//overstock.needle.com/needle_service.js?1"; document.body.appendChild(e);
+
+});
+// End Needle snippet
+""",
+            [str],
+            ['test',
+             '6341292',
+             'EUR              138.53',
+             '$',
+             'n_',
+             '',
+             'script',
+             'text/javascript',
+             '//overstock.needle.com/needle_service.js?1']
+        ),
+        (
+            r"""
+var needleParam = needleParam || {};
+needleParam.chatGroup = "test";
+needleParam.productId = "6341292";
+needleParam.productPrice = "EUR              138.53".replace("$","n_").replace(/,/g,"");
+//Begin Needle (fan-sourcing platform) snippet
+jQuery(document).ready(function(){
+
+var e = document.createElement("script"); e.type = "text/javascript";
+e.async = true;
+e.src = document.location.protocol +
+
+"//overstock.needle.com/needle_service.js?1"; document.body.appendChild(e);
+
+});
+// End Needle snippet
+""",
+            [bool],
+            [True]
         ),
     ]
 
-    for snippet, expected in jscode_snippets:
+    for snippet, types, expected in jscode_snippets:
         jsxml = js2xml.parse(snippet)
-        assert_list_equal(getall(jsxml), expected)
+        assert_list_equal(getall(jsxml, types=types), expected)
