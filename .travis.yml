@@ -5,7 +5,7 @@ python:
   - '2.7'
   - '3.4'
   - '3.5'
-  - '3.6-dev'
+  - '3.6'
 
 install:
   - pip install tox-travis
@@ -26,4 +26,4 @@ deploy:
   on:
     tags: true
     repo: scrapinghub/js2xml
-    condition: $TRAVIS_PYTHON_VERSION = '3.5'
+    condition: $TRAVIS_PYTHON_VERSION = '3.6'
