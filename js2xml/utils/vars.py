@@ -86,9 +86,10 @@ def make_varname(tree):
 def get_vars(tree, doseq=False, ignore_tags=()):
     """
 
-    >>> get_vars('Mage.Cookies.path = "/"')['Mage.Cookies.path']
-    '/'
-    >>> get_vars('Mage.Cookies.path = "/"')['Mage.Cookies.path']
+    >>> get_vars(parse('myobj.a = 42;'))
+    {'myobj.a': 32}
+    >>> get_vars(parse('''otherobj = [{a: 2, 3: "test"}];'''))
+    {'otherobj': [{'a': 2, '3': 'test'}]}
 
     """
     vars = {}
