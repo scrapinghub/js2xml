@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 setup(name='js2xml',
       version='0.3.0',
@@ -19,7 +19,7 @@ bits in Javascript instructions (strings, IDs, function parameters...)
       """,
       author='Paul Tremberth',
       author_email='paul.tremberth@gmail.com',
-      packages=['js2xml'],
+      packages=find_packages(exclude=['tests',]),
       requires=['lxml', 'slimit'],
       install_requires=[
         "slimit",
