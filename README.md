@@ -95,6 +95,27 @@ You can install js2xml via [PyPI](https://pypi.python.org/pypi/js2xml):
 
 # Changelog
 
+## v0.3.0 (2017-08-03)
+
+- Add Python 3.6 support
+- Deprecate `js2xml.jsonlike`
+- Introduce `js2xml.utils.objects` module:
+
+  - `js2xml.utils.objects.make(node)`: takes a node in the js2xml-parsed
+    tree and converts to a suitable Python object
+  - `js2xml.utils.objects.findall(tree, types)`: used to find the
+    top-most nodes in the js2xml-parsed tree that can be converted to
+    a `dict`, `list`, `str`, `bool`, `int` or `float`
+  - `js2xml.utils.objects.getall(tree, types)`: same as `.findall()`
+    except that it converts what was found to the corresponding Python
+    object, using `js2xml.utils.objects.make()`
+
+- Introduce `js2xml.utils.vars` module:
+
+  - `js2xml.utils.vars.get_vars(tree)` can be used to turn a JS snippet
+    into a python object where you can access JavaScript variables
+    by name and get the parsed values
+
 ## v0.2.3 (2017-05-30)
 
 - Regenerate lextab.py and yacctab.py files with PLY 3.10
