@@ -148,6 +148,8 @@ bar";
         """,
         [u'\u13e9\u0352\u0362\u044f\u2778\xb3\u1d43\u034e\u034e\u0442\u035b\u13b7\u0362\u033b\u1d51A\u0362\u13de\ufffd\ufffd\u277c00b']
         ),
+        # surrogate pairs
+        (r'''var name = "\ud835\udebd"''', [u'\U0001d6bd']),
     ]
 
     for snippet, expected in jscode_snippets:
