@@ -8,6 +8,8 @@ import lxml.etree as ET
 
 
 invalid_unicode_re = re.compile(u"""[\u0001-\u0008\u000b\u000e-\u001f\u007f]""", re.U)
+surrogate_unicode_re = re.compile(u'[\\ud800-\\udbff][\\udc00-\\udfff]', re.U)
+
 
 def unescape_string(input_string):
     input_string = invalid_unicode_re.sub(u"\ufffd", input_string)
@@ -251,6 +253,9 @@ class XmlVisitor(object):
 
     def visit_String(self, node):
         str_value = pyast.literal_eval("u"+node.value)
+        if surrogate_unicode_re.search(str_value):
+            in_utf16 = str_value.encode('utf16', 'surrogatepass')
+            str_value = in_utf16.decode('utf16')
         return [E.string(unescape_string(str_value))]
 
     def visit_Continue(self, node):
