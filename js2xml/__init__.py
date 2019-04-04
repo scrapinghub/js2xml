@@ -1,9 +1,9 @@
-import six
+from calmjs.parse.parsers.es5 import Parser
 import lxml.etree
+import six
 
-from .parser import CustomParser as Parser
-from .xmlvisitor import XmlVisitor
 from .jsonlike import *
+from .xmlvisitor import XmlVisitor
 
 
 __version__ = "0.3.1"

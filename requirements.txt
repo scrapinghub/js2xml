@@ -1,7 +1,3 @@
+calmjs.parse
 lxml
-slimit==0.8.1
-
-# Ply 3.6 has an issue that causes slimit to fail
-# https://github.com/dabeaz/ply/issues/63
-ply>3.6
 six

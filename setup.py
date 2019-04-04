@@ -20,9 +20,9 @@ bits in Javascript instructions (strings, IDs, function parameters...)
       author='Paul Tremberth',
       author_email='paul.tremberth@gmail.com',
       packages=find_packages(exclude=['tests',]),
-      requires=['lxml', 'slimit'],
+      requires=['lxml', 'calmjs.parse'],
       install_requires=[
-        "slimit",
+        "calmjs.parse",
         "lxml",
         "six"
       ],
