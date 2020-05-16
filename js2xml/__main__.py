@@ -2,6 +2,8 @@
 import sys
 from argparse import ArgumentParser
 
+import six
+
 import js2xml
 
 
@@ -11,8 +13,13 @@ def main():
     ap.add_argument('filenames', nargs='*', default=['-'])
     args = ap.parse_args()
 
+    if six.PY2:
+        mode = 'rU'
+    else:
+        mode = 'r'
+
     for fn in args.filenames:
-        fo = sys.stdin if fn == '-' else open(fn, 'rU')
+        fo = sys.stdin if fn == '-' else open(fn, mode)
         parsed = js2xml.parse(fo.read())
         print(js2xml.pretty_print(parsed))
 
