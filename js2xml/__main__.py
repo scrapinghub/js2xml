@@ -13,10 +13,7 @@ def main():
     ap.add_argument('filenames', nargs='*', default=['-'])
     args = ap.parse_args()
 
-    if six.PY2:
-        mode = 'rU'
-    else:
-        mode = 'r'
+    mode = 'rU' if six.PY2 else 'r'
 
     for fn in args.filenames:
         fo = sys.stdin if fn == '-' else open(fn, mode)
