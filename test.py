@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import sys
 import js2xml
 
@@ -11,6 +13,6 @@ if not text:
         "key4": false
     };
     """
-print text
+print(text)
 tree = js2xml.parse(text, debug=False)
-print js2xml.pretty_print(tree)
+print(js2xml.pretty_print(tree))
