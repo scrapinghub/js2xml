@@ -246,7 +246,7 @@ def test_parse_encoding():
 
 
 def test_keywords_as_object_keys():
-    # https://www.w3schools.com/js/js_reserved.asp
+    # https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#Keywords
     keywords = [
         'abstract',
         'arguments',
