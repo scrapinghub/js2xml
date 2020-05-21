@@ -1,10 +1,10 @@
 import ast as pyast
 import re
 
-import six
-from slimit import ast
+from calmjs.parse import asttypes as ast
 from lxml.builder import E
 import lxml.etree as ET
+import six
 
 
 invalid_unicode_re = re.compile(u"""[\u0001-\u0008\u000b\u000e-\u001f\u007f]""", re.U)
@@ -25,7 +25,7 @@ class XmlVisitor(object):
     def generic_visit(self, node):
         return 'GEN: %r' % node
 
-    def visit_Program(self, node):
+    def visit_ES5Program(self, node):
         program = E.program()
         for child in node:
             program.extend(self.visit(child))
@@ -47,6 +47,9 @@ class XmlVisitor(object):
             varel.extend(self.visit(node.initializer))
         return [varel]
 
+    def visit_VarDeclNoIn(self, node):
+        return self.visit_VarDecl(node)
+
     def visit_Identifier(self, node):
         if isinstance(node.value, (int, float)):
             return [E.identifier(node.value)]
@@ -56,6 +59,9 @@ class XmlVisitor(object):
             idel = E.identifier()
             idel.attrib["name"] = node.value
             return [idel]
+
+    def visit_PropIdentifier(self, node):
+        return self.visit_Identifier(node)
 
     def visit_Assign(self, node):
         if node.op == ':':
@@ -97,13 +103,8 @@ class XmlVisitor(object):
         propel = E.property()
         propel.extend(self.visit(node.prop_name))
         setel = ET.Element("set")
-        if len(node.parameters) > 1:
-            raise SyntaxError(
-                'Setter functions must have one argument: %s' % node)
         params = E.params()
-        for param in node.parameters:
-            params.extend(self.visit(param))
-
+        params.extend(self.visit(node.parameter))
         body = E.body()
         for el in node.elements:
             body.extend(self.visit(el))
@@ -150,12 +151,6 @@ class XmlVisitor(object):
             forel.append(initel)
         if node.init is None:
             forel.extend(E.init())
-        elif isinstance(node.init, (ast.Assign, ast.Comma, ast.FunctionCall,
-                                    ast.UnaryOp, ast.Identifier, ast.BinOp,
-                                    ast.Conditional, ast.Regex, ast.NewExpr)):
-            pass
-        else:
-            pass
         if node.cond is not None:
             condition = E.condition()
             condition.extend(self.visit(node.cond))
@@ -197,13 +192,13 @@ class XmlVisitor(object):
         binop.append(rightpart)
         return [binop]
 
-    def visit_UnaryOp(self, node):
+    def visit_PostfixExpr(self, node):
+        postfix = E.postfix(operation=node.op)
+        postfix.extend(self.visit(node.value))
+        return [postfix]
 
-        if node.postfix:
-            postfix = E.postfix(operation=node.op)
-            postfix.extend(self.visit(node.value))
-            return [postfix]
-        elif node.op in ('delete', 'void', 'typeof'):
+    def visit_UnaryExpr(self, node):
+        if node.op in ('delete', 'void', 'typeof'):
             unary = E.unaryoperation(operation=node.op)
             unary.extend(self.visit(node.value))
         else:
@@ -297,10 +292,8 @@ class XmlVisitor(object):
         expression.extend(self.visit(node.expr))
         switch = E.switch()
         switch.append(expression)
-        for case in node.cases:
-            switch.extend(self.visit_Case(case))
-        if node.default is not None:
-            switch.extend(self.visit_Default(node.default))
+        for child in node.case_block.children():
+            switch.extend(self.visit(child))
         return [switch]
 
     def visit_Case(self, node):
@@ -439,6 +432,11 @@ class XmlVisitor(object):
         funccall.append(arguments)
         return [funccall]
 
+    def visit_GroupingOp(self, node):
+        op = E.groupingoperator()
+        op.extend(self.visit(node.expr))
+        return [op]
+
     def visit_Object(self, node):
         obj = ET.Element("object")
         for prop in node.properties:
@@ -447,10 +445,10 @@ class XmlVisitor(object):
 
     def visit_Array(self, node):
         array = E.array()
-        length = len(node.items) - 1
         for index, item in enumerate(node.items):
             if isinstance(item, ast.Elision):
-                array.append(E.undefined())
+                for _ in range(item.value):
+                    array.append(E.undefined())
             else:
                 array.extend(self.visit(item))
         return [array]

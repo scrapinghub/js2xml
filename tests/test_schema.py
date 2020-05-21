@@ -1105,6 +1105,12 @@ def test_schema():
 """
 <program>
   <for>
+    <init>
+      <empty>;</empty>
+    </init>
+    <condition>
+      <empty>;</empty>
+    </condition>
     <statement>
       <block>
         <break/>
@@ -1123,6 +1129,9 @@ def test_schema():
 """
 <program>
   <for>
+    <init>
+      <empty>;</empty>
+    </init>
     <condition>
       <binaryoperation operation="&lt;">
         <left>
@@ -1236,6 +1245,9 @@ def test_schema():
 """
 <program>
   <for>
+    <init>
+      <empty>;</empty>
+    </init>
     <condition>
       <binaryoperation operation="&lt;">
         <left>
@@ -1766,25 +1778,27 @@ def test_schema():
         """,
 """
 <program>
-  <functioncall>
-    <function>
-      <funcexpr>
-        <identifier/>
-        <parameters/>
-        <body>
-          <functioncall>
-            <function>
-              <identifier name="alert"/>
-            </function>
-            <arguments>
-              <string>foo</string>
-            </arguments>
-          </functioncall>
-        </body>
-      </funcexpr>
-    </function>
-    <arguments/>
-  </functioncall>
+  <groupingoperator>
+    <functioncall>
+      <function>
+        <funcexpr>
+          <identifier/>
+          <parameters/>
+          <body>
+            <functioncall>
+              <function>
+                <identifier name="alert"/>
+              </function>
+              <arguments>
+                <string>foo</string>
+              </arguments>
+            </functioncall>
+          </body>
+        </funcexpr>
+      </function>
+      <arguments/>
+    </functioncall>
+  </groupingoperator>
 </program>
 """
         ),
