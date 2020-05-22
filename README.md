@@ -33,7 +33,7 @@ You can install js2xml via [PyPI](https://pypi.python.org/pypi/js2xml):
 >>> parsed.xpath("//funcdecl/@name")  # extracts function name
 ['factorial']
 >>>
->>> print js2xml.pretty_print(parsed)  # pretty-print generated XML
+>>> print(js2xml.pretty_print(parsed))  # pretty-print generated XML
 <program>
   <funcdecl name="factorial">
     <parameters>
@@ -88,8 +88,6 @@ You can install js2xml via [PyPI](https://pypi.python.org/pypi/js2xml):
 </program>
 
 >>>
-
-
 ```
 
 
