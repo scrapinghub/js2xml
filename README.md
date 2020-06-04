@@ -99,15 +99,15 @@ You can install js2xml via [PyPI](https://pypi.python.org/pypi/js2xml):
 
 - Add Python 3.7 and 3.8 support, drop Python 3.4 support
 
-- Use calmjs.parse instead of slimit for JavaScript parsing
+- Use `calmjs.parse` instead of `slimit` for JavaScript parsing
 
-  [calmjs.parse](https://github.com/calmjs/calmjs.parse) is a well-maintained
-  fork of [slimit](https://github.com/rspivak/slimit) which solves some of its
-  shortcomings, such as support for JavaScript keywords being used as object
-  keys.
+  [`calmjs.parse`](https://github.com/calmjs/calmjs.parse) is a well-maintained
+  fork of [`slimit`](https://github.com/rspivak/slimit) which solves some of
+  its shortcomings, such as support for JavaScript keywords being used as
+  object keys.
 
-  However, calmjs.parse also introduces slight changes to the output of js2xml,
-  making this change backward-incompatible.
+  However, `calmjs.parse` also introduces slight changes to the output of
+  js2xml, making this change backward-incompatible.
 
 - Fix unicode surrogate pair handling
 
