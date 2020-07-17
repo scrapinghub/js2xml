@@ -1,30 +1,25 @@
 sudo: false
-
 language: python
 python:
-  - '2.7'
-  - '3.5'
-  - '3.6'
-  - '3.7'
-  - '3.8'
-
+- '2.7'
+- '3.5'
+- '3.6'
+- '3.7'
+- '3.8'
 install:
-  - pip install tox-travis
-  - pip install -r requirements.txt
-  - pip install codecov
-
+- pip install tox-travis
+- pip install -r requirements.txt
+- pip install codecov
 after_success:
-  - codecov
-
+- codecov
 script: tox
-
 deploy:
   provider: pypi
   distributions: sdist bdist_wheel
-  user: redapple
-  password:
-    secure: fxvfv8mDt6SBoDQ6yaK8ceKEJm2e3k60RXzFUGjRQfaoWZNpzfzB3ETQmBWDMnX0JN+9jmr0X+gbIn8XgfL4gzc+d2XXauJ7S+Yw/Tnon/PlzbMaiOZgftyJqZT+ARebHtNooubglsJ1a/fEQlnxKDjdttJ1bgQhp5gVXAmAtT4=
+  user: scrapinghub
   on:
     tags: true
     repo: scrapinghub/js2xml
-    condition: $TRAVIS_PYTHON_VERSION = '3.6'
+    condition: "$TRAVIS_PYTHON_VERSION = '3.6'"
+  password:
+    secure: BwIGO+y3uk4AkZwcjc0wd0x5iyuOl6MVOt+xrYAkS4ycksyCOwyIe0txahmAjuvgDHFvMPUwyfDvUBxeWQPn30gm9gbHUkflkgusGpfqfJfPDDKkJbZ1s/fx41uY4aOvFB6u7rjBjMnUeGHq5IOIDGO/056LJi8KwLsudYXFlRg9w3nkta+dwRNFCqL+Vfz0qyoR6/+CLOfYUS+SHrZrOsAn6ZLBC4IDUB8/aVRRtll+tiTlSZbsSqx2215HmC10QoFGjIxCMAxHEVFprs0qEF/MmNF/GY4Cf7avaQ9FjS4/Z3pjBPtMJDb3JQYh7z4rKUyxoT86x099aAVpEBY4wajkKexfY191ntYSlntsDf0Rt4dXCxOJRkQ4LC3LfZGIBVcXTqPo+iCbQtbToApYbn/zI183igA3sa19sr2qZ5VYUy6fra0LS6zXVdWDxvtSvF6BZqTnJlyW8F4Ebyy2G3EgdGQUz3nMAFy7ogzBiJrIibo7ze0uKswWySnrqp4Cwq7C75ZBz84YK9ST4wk9fYjWl/7gFoL5iEbaG+4nxJwVlHLnelJ8KEpPQ6x/Ii/D9s693EoDXJ+IQ7I64bxHQQkoNnVr6xjZE62wkrPw69qZuvAtNAVCPS81poRSbZ7//vYFpH1zum4L5efRgYzE1MTSV49tNaa79u+bKqFjRO4=
