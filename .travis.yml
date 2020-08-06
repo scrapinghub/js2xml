@@ -16,7 +16,7 @@ script: tox
 deploy:
   provider: pypi
   distributions: sdist bdist_wheel
-  user: "__token__"
+  username: "__token__"
   on:
     tags: true
     repo: scrapinghub/js2xml
