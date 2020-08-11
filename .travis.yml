@@ -21,5 +21,3 @@ deploy:
     tags: true
     repo: scrapinghub/js2xml
     condition: "$TRAVIS_PYTHON_VERSION = '3.6'"
-  password:
-    secure: taTAeA/xfZQv1fTRFqKhbl9Z67yVSgrMkwJiImPnljw0uC+3GoG81KeyMRewGAr7lp0O9qrC2vrN8u87gQjsgDGgXtJs8DHC/3gIjXddTSXnwx1PLLO4D+WBXukzIb4w+NaCHj+NtcyeXVv0PReL5kCcMQTf9aB7x5Qba+oXUBECfJ0ua8w3RNsXS8QTdNiwhZ1a+93wIxFjreDh56ep6Ccv7pfyeoqcGF1z0zQjhqbbTlKEErGzcxBUDpkEhr2at+xK23bgJXPwOlo58FngaTyVGm7PfGYWUFWRERL3Uefx0ns1hMK/P32no5G39IE93DZIiweLFJP8el3J72t1j8iR/oBqi655f0n2uc1q2ZXjhEMK2AwfMFtkAHjnf1CHKpa/J/T9FefoENgUflZlzs080RGZA1t3kHUo1bHj5wHzCGXTzk94mKiPJUAxkFI1N0+Enc2YAeb4Wp0c2A4t/2afb/9iil512O+bq+Miq4DHDDX1U+1B1a6qAIBhWoH/vdqUa/lFCfS6hbIZaJ+ef3aUBp72LSx7+8GkLrdjtdL+ytBmpWE4qZhfXZM74drY/fAfknruQ0ZgzoULh2hmDbyxBMB2GNWQiPjCWdLwFJB+2snr4P30HZ1a4qPhwTEhSK7kamFpw5161k/kfX8pHL3HrspfrrYhCBjFmg9C8zo=
