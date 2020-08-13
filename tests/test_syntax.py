@@ -321,6 +321,9 @@ def test_syntax():
             document.write ("Outer finally running");
         }
         """,
+        """
+        new Map
+        """,
     ]
 
     for snippet in jscode_snippets:
