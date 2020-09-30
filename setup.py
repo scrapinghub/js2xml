@@ -24,13 +24,11 @@ bits in Javascript instructions (strings, IDs, function parameters...)
       install_requires=[
         "calmjs.parse",
         "lxml",
-        "six"
       ],
       classifiers = [
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Text Processing :: Markup :: XML',
         'Operating System :: POSIX :: Linux',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
