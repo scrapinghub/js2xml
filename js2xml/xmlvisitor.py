@@ -4,7 +4,6 @@ import re
 from calmjs.parse import asttypes as ast
 from lxml.builder import E
 import lxml.etree as ET
-import six
 
 
 invalid_unicode_re = re.compile(u"""[\u0001-\u0008\u000b\u000e-\u001f\u007f]""", re.U)
@@ -53,7 +52,7 @@ class XmlVisitor(object):
     def visit_Identifier(self, node):
         if isinstance(node.value, (int, float)):
             return [E.identifier(node.value)]
-        elif isinstance(node.value, six.string_types):
+        elif isinstance(node.value, str):
             if node.value == "undefined":
                 return [E.undefined()]
             idel = E.identifier()
@@ -455,4 +454,3 @@ class XmlVisitor(object):
 
     def visit_This(self, node):
         return [E.identifier('this')]
-

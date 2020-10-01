@@ -1,7 +1,7 @@
-from __future__ import print_function
-
 import sys
+
 import js2xml
+
 
 text = sys.stdin.read()
 if not text:

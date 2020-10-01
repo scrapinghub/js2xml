@@ -1,3 +1,2 @@
 calmjs.parse
 lxml
-six

@@ -93,6 +93,10 @@ You can install js2xml via [PyPI](https://pypi.python.org/pypi/js2xml):
 
 # Changelog
 
+## v0.5.0 (2020-NN-NN)
+
+- Drop Python 2.7 support, remove `six` dependency
+
 ## v0.4.0 (2020-06-04)
 
 - Add Python 3.7 and 3.8 support, drop Python 3.4 support
