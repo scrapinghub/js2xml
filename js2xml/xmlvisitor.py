@@ -398,7 +398,7 @@ class XmlVisitor(object):
         newel = E.new()
         newel.extend(self.visit(node.identifier))
         arguments = E.arguments()
-        for arg in node.args:
+        for arg in node.args or ():
             arguments.extend(self.visit(arg))
         newel.append(arguments)
         return [newel]
