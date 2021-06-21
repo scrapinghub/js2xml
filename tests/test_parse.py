@@ -1,5 +1,6 @@
 import js2xml
-from nose.tools import *
+
+from nose.tools import assert_equal, assert_is_not_none, assert_list_equal, assert_raises
 
 
 def test_parse():

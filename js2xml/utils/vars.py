@@ -1,4 +1,3 @@
-from js2xml import parse, pretty_print as tostring
 from js2xml.utils.objects import make as objects_make
 
 

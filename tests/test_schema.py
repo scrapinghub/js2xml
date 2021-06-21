@@ -1,6 +1,6 @@
-import lxml.etree
 import js2xml
-from nose.tools import *
+
+from nose.tools import assert_equal
 
 
 def test_schema():

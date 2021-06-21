@@ -1,6 +1,7 @@
 import js2xml
 import js2xml.jsonlike
-from nose.tools import *
+
+from nose.tools import assert_list_equal
 
 
 def test_json():

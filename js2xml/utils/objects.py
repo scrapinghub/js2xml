@@ -69,7 +69,7 @@ def make(tree):
     elif tree.tag == "number":
         try:
             return int(tree.get("value"))
-        except:
+        except ValueError:
             return float(tree.get("value"))
     elif tree.tag == "undefined":
         return tree.tag

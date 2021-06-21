@@ -1,9 +1,9 @@
 import ast as pyast
 import re
 
+import lxml.etree as ET
 from calmjs.parse import asttypes as ast
 from lxml.builder import E
-import lxml.etree as ET
 
 
 invalid_unicode_re = re.compile(u"""[\u0001-\u0008\u000b\u000e-\u001f\u007f]""", re.U)
@@ -237,7 +237,7 @@ class XmlVisitor(object):
     def visit_Operator(self, node):
         try:
             return node.value
-        except:
+        except Exception:
             return node
 
     def visit_str(self, node):

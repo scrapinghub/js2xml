@@ -1,5 +1,5 @@
-from calmjs.parse.parsers.es5 import Parser
 import lxml.etree
+from calmjs.parse.parsers.es5 import Parser
 
 from .jsonlike import *
 from .xmlvisitor import XmlVisitor

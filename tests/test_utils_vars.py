@@ -1,6 +1,7 @@
-from js2xml import parse, pretty_print
+from js2xml import parse
 from js2xml.utils.vars import get_vars
-from nose.tools import *
+
+from nose.tools import assert_dict_equal
 
 
 def test_vars():

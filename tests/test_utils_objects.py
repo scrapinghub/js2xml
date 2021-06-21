@@ -1,6 +1,7 @@
 import js2xml
 from js2xml.utils.objects import findall, getall, make
-from nose.tools import *
+
+from nose.tools import assert_list_equal
 
 
 def test_json():

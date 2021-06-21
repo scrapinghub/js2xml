@@ -1,5 +1,6 @@
 import js2xml
-from nose.tools import *
+
+from nose.tools import assert_is_not_none
 
 
 def test_syntax():
