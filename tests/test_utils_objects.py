@@ -10,37 +10,35 @@ def test_json():
             var arr1 = ["a","b","c"];
             var arr2 = ["d","e","f"];
             """,
-            [['a', 'b', 'c'],
-             ['d', 'e', 'f']]
+            [["a", "b", "c"], ["d", "e", "f"]],
         ),
         (
             r"""
             var arr1 = ["a", null, "c"];
             var arr2 = [null, "e", null];
             """,
-            [['a', None, 'c'],
-             [None, 'e', None]]
+            [["a", None, "c"], [None, "e", None]],
         ),
         (
             r"""
             var arr1 = ["a", undefined, "c"];
             var arr2 = [undefined, "e", null];
             """,
-            [['a', 'undefined', 'c'],
-             ['undefined', 'e', None]]
+            [["a", "undefined", "c"], ["undefined", "e", None]],
         ),
         (
             r"""
             var i = -3.14;
-            """, []
-            ),
+            """,
+            [],
+        ),
         (
             r"""
             money = {
                 'quarters': 20
             };
             """,
-            [{"quarters": 20}]
+            [{"quarters": 20}],
         ),
         (
             r"""
@@ -48,7 +46,7 @@ def test_json():
                 quarters: 20
             };
             """,
-            [{"quarters": 20}]
+            [{"quarters": 20}],
         ),
         (
             r"""
@@ -58,13 +56,13 @@ def test_json():
                 "currency": currency
             };
             """,
-            [{'currency': 'currency', 'value': 20}]
+            [{"currency": "currency", "value": 20}],
         ),
         (
             r"""
             t = {a: "3", "b": 3, "3": 3.0};
             """,
-            [{'3': 3.0, 'a': '3', 'b': 3}]
+            [{"3": 3.0, "a": "3", "b": 3}],
         ),
         (
             r"""
@@ -76,7 +74,7 @@ def test_json():
             };
             money.addQuarters(10);
             """,
-            []
+            [],
         ),
         (
             r"""
@@ -90,7 +88,7 @@ def test_json():
             };
             money.addQuarters(10);
             """,
-            [[1,2,3,4], {'nested': [5,6,7,8]}]
+            [[1, 2, 3, 4], {"nested": [5, 6, 7, 8]}],
         ),
         (
             r"""
@@ -100,9 +98,7 @@ def test_json():
                 'chicken': {'eggs': [5,6,7,8]}
             };
             """,
-            [{'apples': 10,
-              'carrots': [1, 2, 3, 4],
-              'chicken': {'eggs': [5, 6, 7, 8]}}]
+            [{"apples": 10, "carrots": [1, 2, 3, 4], "chicken": {"eggs": [5, 6, 7, 8]}}],
         ),
         (
             r"""
@@ -117,12 +113,10 @@ def test_json():
                 'spinach': {'cans': [true, 2]}
             };
             """,
-            [{'apples': 10,
-              'carrots': [1, 2, 3, 4],
-              'chicken': {'eggs': [5, 6, 7, 8]}},
-             {'potatoes': [9, False, 7, 6],
-              'spinach': {'cans': [True, 2]},
-              'tomatoes': 20}]
+            [
+                {"apples": 10, "carrots": [1, 2, 3, 4], "chicken": {"eggs": [5, 6, 7, 8]}},
+                {"potatoes": [9, False, 7, 6], "spinach": {"cans": [True, 2]}, "tomatoes": 20},
+            ],
         ),
     ]
     for snippet, expected in jscode_snippets:
@@ -137,20 +131,18 @@ def test_findall():
             var arr1 = ["a","b","c"];
             var arr2 = ["d","e","f"];
             """,
-            '//array',
+            "//array",
             [dict, list],
-            [['a', 'b', 'c'],
-             ['d', 'e', 'f']]
+            [["a", "b", "c"], ["d", "e", "f"]],
         ),
         (
             r"""
             var arr1 = {"a": "b", "c": "d"};
             var arr2 = {"e": 1, "f": 2};
             """,
-            '//object',
+            "//object",
             [dict, list],
-            [{'a': 'b', 'c': 'd'},
-             {'e': 1, 'f': 2}]
+            [{"a": "b", "c": "d"}, {"e": 1, "f": 2}],
         ),
     ]
 
@@ -204,15 +196,17 @@ e.src = document.location.protocol +
 // End Needle snippet
 """,
             [str],
-            ['test',
-             '6341292',
-             'EUR              138.53',
-             '$',
-             'n_',
-             '',
-             'script',
-             'text/javascript',
-             '//overstock.needle.com/needle_service.js?1']
+            [
+                "test",
+                "6341292",
+                "EUR              138.53",
+                "$",
+                "n_",
+                "",
+                "script",
+                "text/javascript",
+                "//overstock.needle.com/needle_service.js?1",
+            ],
         ),
         (
             r"""
@@ -233,7 +227,7 @@ e.src = document.location.protocol +
 // End Needle snippet
 """,
             [bool],
-            [True]
+            [True],
         ),
     ]
 

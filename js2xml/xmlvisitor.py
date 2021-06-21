@@ -7,22 +7,21 @@ import lxml.etree as ET
 
 
 invalid_unicode_re = re.compile(u"""[\u0001-\u0008\u000b\u000e-\u001f\u007f]""", re.U)
-surrogate_unicode_re = re.compile(u'[\\ud800-\\udbff][\\udc00-\\udfff]', re.U)
+surrogate_unicode_re = re.compile(u"[\\ud800-\\udbff][\\udc00-\\udfff]", re.U)
 
 
 def unescape_string(input_string):
     input_string = invalid_unicode_re.sub(u"\ufffd", input_string)
-    return input_string.replace(r'\/', '/')
+    return input_string.replace(r"\/", "/")
 
 
 class XmlVisitor(object):
-
     def visit(self, node):
-        method = 'visit_%s' % node.__class__.__name__
+        method = "visit_%s" % node.__class__.__name__
         return getattr(self, method, self.generic_visit)(node)
 
     def generic_visit(self, node):
-        return 'GEN: %r' % node
+        return "GEN: %r" % node
 
     def visit_ES5Program(self, node):
         program = E.program()
@@ -63,7 +62,7 @@ class XmlVisitor(object):
         return self.visit_Identifier(node)
 
     def visit_Assign(self, node):
-        if node.op == ':':
+        if node.op == ":":
             propname = self.visit(node.left)[0]
             if isinstance(node.left, ast.String):
                 propel = E.property(name=propname.text)
@@ -114,8 +113,7 @@ class XmlVisitor(object):
         return [E.number(value=node.value)]
 
     def visit_Comma(self, node):
-        comma = E.comma(E.left(self.visit(node.left)[0]),
-                        E.right(self.visit(node.right)[0]))
+        comma = E.comma(E.left(self.visit(node.left)[0]), E.right(self.visit(node.right)[0]))
         return [comma]
 
     def visit_EmptyStatement(self, node):
@@ -197,7 +195,7 @@ class XmlVisitor(object):
         return [postfix]
 
     def visit_UnaryExpr(self, node):
-        if node.op in ('delete', 'void', 'typeof'):
+        if node.op in ("delete", "void", "typeof"):
             unary = E.unaryoperation(operation=node.op)
             unary.extend(self.visit(node.value))
         else:
@@ -246,10 +244,10 @@ class XmlVisitor(object):
         return node
 
     def visit_String(self, node):
-        str_value = pyast.literal_eval("u"+node.value)
+        str_value = pyast.literal_eval("u" + node.value)
         if surrogate_unicode_re.search(str_value):
-            in_utf16 = str_value.encode('utf16', 'surrogatepass')
-            str_value = in_utf16.decode('utf16')
+            in_utf16 = str_value.encode("utf16", "surrogatepass")
+            str_value = in_utf16.decode("utf16")
         return [E.string(unescape_string(str_value))]
 
     def visit_Continue(self, node):
@@ -453,4 +451,4 @@ class XmlVisitor(object):
         return [array]
 
     def visit_This(self, node):
-        return [E.identifier('this')]
+        return [E.identifier("this")]

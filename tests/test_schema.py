@@ -5,96 +5,93 @@ from nose.tools import *
 
 def test_schema():
     jscode_snippets = [
-
         # strings
         (
-        r"""
+            r"""
         "test";
         """,
-        """
+            """
 <program>
   <string>test</string>
 </program>
 
-        """
+        """,
         ),
         (
-        r"""
+            r"""
         "test\
         multiline";
         """,
-        """
+            """
 <program>
   <string>test        multiline</string>
 </program>
-        """
+        """,
         ),
-
         # numbers
         (
-        "3.14;",
-        """
+            "3.14;",
+            """
 <program>
   <number value="3.14"/>
 </program>
-        """
+        """,
         ),
         (
-        "-12;",
-        """
+            "-12;",
+            """
 <program>
   <number value="-12"/>
 </program>
-        """
+        """,
         ),
         (
-        "3.45e2;",
-        """
+            "3.45e2;",
+            """
 <program>
   <number value="3.45e2"/>
 </program>
-        """
+        """,
         ),
         (
-        "0377;",
-        """
+            "0377;",
+            """
 <program>
   <number value="0377"/>
 </program>
-        """
+        """,
         ),
         (
-        "0xFF;",
-        """
+            "0xFF;",
+            """
 <program>
   <number value="0xFF"/>
 </program>
-        """
+        """,
         ),
-
         # arrays
         (
-        "[]",
-"""
+            "[]",
+            """
 <program>
   <array/>
 </program>
-"""
+""",
         ),
         (
-        "[1,2]",
-        """
+            "[1,2]",
+            """
 <program>
   <array>
     <number value="1"/>
     <number value="2"/>
   </array>
 </program>
-        """
+        """,
         ),
         (
-        "[1,,2]",
-        """
+            "[1,,2]",
+            """
 <program>
   <array>
     <number value="1"/>
@@ -102,11 +99,11 @@ def test_schema():
     <number value="2"/>
   </array>
 </program>
-        """
+        """,
         ),
         (
-        "[1,,2,,,3,]",
-        """
+            "[1,,2,,,3,]",
+            """
 <program>
   <array>
     <number value="1"/>
@@ -117,11 +114,11 @@ def test_schema():
     <number value="3"/>
   </array>
 </program>
-        """
+        """,
         ),
         (
-        "['a', 'b','c']",
-        """
+            "['a', 'b','c']",
+            """
 <program>
   <array>
     <string>a</string>
@@ -130,11 +127,11 @@ def test_schema():
   </array>
 </program>
 
-        """
+        """,
         ),
         (
-        "[a, 'b', c]",
-        """
+            "[a, 'b', c]",
+            """
 <program>
   <array>
     <identifier name="a"/>
@@ -143,13 +140,12 @@ def test_schema():
   </array>
 </program>
 
-        """
+        """,
         ),
-
         # objects
         (
-        "o = {};",
-"""
+            "o = {};",
+            """
 <program>
   <assign operator="=">
     <left>
@@ -160,11 +156,11 @@ def test_schema():
     </right>
   </assign>
 </program>
-"""
+""",
         ),
         (
-        "o = {a: 1};",
-        """
+            "o = {a: 1};",
+            """
 <program>
   <assign operator="=">
     <left>
@@ -180,11 +176,11 @@ def test_schema():
   </assign>
 </program>
 
-        """
+        """,
         ),
         (
-        "o = {a: 1, b: 2};",
-        """
+            "o = {a: 1, b: 2};",
+            """
 <program>
   <assign operator="=">
     <left>
@@ -202,11 +198,11 @@ def test_schema():
     </right>
   </assign>
 </program>
-        """
+        """,
         ),
         (
-        "o = {'c': 1, 'd': 2};",
-        """
+            "o = {'c': 1, 'd': 2};",
+            """
 <program>
   <assign operator="=">
     <left>
@@ -225,11 +221,11 @@ def test_schema():
   </assign>
 </program>
 
-        """
+        """,
         ),
         (
-        'o = {"c": 1, "d": 2};',
-        """
+            'o = {"c": 1, "d": 2};',
+            """
 <program>
   <assign operator="=">
     <left>
@@ -248,11 +244,11 @@ def test_schema():
   </assign>
 </program>
 
-        """
+        """,
         ),
         (
-        'o = {"c": 1, d: "e"};',
-        """
+            'o = {"c": 1, d: "e"};',
+            """
 <program>
   <assign operator="=">
     <left>
@@ -271,11 +267,11 @@ def test_schema():
   </assign>
 </program>
 
-        """
+        """,
         ),
         (
-        "e = {foo: 5, bar: 6, baz: ['Baz', 'Content']};",
-        """
+            "e = {foo: 5, bar: 6, baz: ['Baz', 'Content']};",
+            """
 <program>
   <assign operator="=">
     <left>
@@ -300,100 +296,99 @@ def test_schema():
   </assign>
 </program>
 
-        """
+        """,
         ),
         # other primitive data types
         (
-        "null;",
-        """
+            "null;",
+            """
 <program>
   <null/>
 </program>
 
-        """
+        """,
         ),
         (
-        "undefined;",
-        """
+            "undefined;",
+            """
 <program>
   <undefined/>
 </program>
 
-        """
+        """,
         ),
         (
-        "true;",
-        """
+            "true;",
+            """
 <program>
   <boolean>true</boolean>
 </program>
 
-        """
+        """,
         ),
         (
-        "false;",
-        """
+            "false;",
+            """
 <program>
   <boolean>false</boolean>
 </program>
 
-        """
+        """,
         ),
-
         # variables
         (
-        r"""
+            r"""
         var i;
         """,
-        """
+            """
 <program>
   <var name="i"/>
 </program>
 
-        """
+        """,
         ),
         (
-        r"""
+            r"""
         var i,j,k;
         """,
-        """
+            """
 <program>
   <var name="i"/>
   <var name="j"/>
   <var name="k"/>
 </program>
 
-        """
+        """,
         ),
         (
-        r"""
+            r"""
         var i = 0;
         """,
-        """
+            """
 <program>
   <var name="i">
     <number value="0"/>
   </var>
 </program>
 
-        """
+        """,
         ),
         (
-        r"""
+            r"""
         var i = "test";
         """,
-        """
+            """
 <program>
   <var name="i">
     <string>test</string>
   </var>
 </program>
 
-        """
+        """,
         ),
         (
-        r"""var z = 'foxes', r = 'birds';""",
-        """
+            r"""var z = 'foxes', r = 'birds';""",
+            """
 <program>
   <var name="z">
     <string>foxes</string>
@@ -403,13 +398,13 @@ def test_schema():
   </var>
 </program>
 
-        """
+        """,
         ),
         (
-        r"""
+            r"""
         var i, j, k = 0;
         """,
-        """
+            """
 <program>
   <var name="i"/>
   <var name="j"/>
@@ -418,13 +413,13 @@ def test_schema():
   </var>
 </program>
 
-        """
+        """,
         ),
         (
-        r"""
+            r"""
         var i=1, j, k = 2;
         """,
-        """
+            """
 <program>
   <var name="i">
     <number value="1"/>
@@ -434,13 +429,13 @@ def test_schema():
     <number value="2"/>
   </var>
 </program>
-        """
+        """,
         ),
         (
-        r"""
+            r"""
         var i = obj.prop;
         """,
-"""
+            """
 <program>
   <var name="i">
     <dotaccessor>
@@ -453,37 +448,36 @@ def test_schema():
     </dotaccessor>
   </var>
 </program>
-"""
+""",
         ),
         (
-        r"""var testObj = {};""",
-"""
+            r"""var testObj = {};""",
+            """
 <program>
   <var name="testObj">
     <object/>
   </var>
 </program>
-"""
+""",
         ),
         (
-        r"""var testObj = [];""",
-"""
+            r"""var testObj = [];""",
+            """
 <program>
   <var name="testObj">
     <array/>
   </var>
 </program>
-"""
+""",
         ),
-
         # operations
         (
-        r"""
+            r"""
         1 + 2;
         "foo" + false;
         3 - 5
         """,
-"""
+            """
 <program>
   <binaryoperation operation="+">
     <left>
@@ -510,15 +504,15 @@ def test_schema():
     </right>
   </binaryoperation>
 </program>
-"""
+""",
         ),
         (
-        r"""
+            r"""
         1.0 / 2.0;
         -2 * 2;
         12 % 5;
         """,
-"""
+            """
 <program>
   <binaryoperation operation="/">
     <left>
@@ -545,11 +539,10 @@ def test_schema():
     </right>
   </binaryoperation>
 </program>
-"""
+""",
         ),
-
         (
-        r"""
+            r"""
         // Postfix
         var x = 3;
         y = x++; // y = 3, x = 4
@@ -558,7 +551,7 @@ def test_schema():
         var a = 2;
         b = ++a; // a = 3, b = 3
         """,
-"""
+            """
 <program>
   <var name="x">
     <number value="3"/>
@@ -588,10 +581,10 @@ def test_schema():
   </assign>
 </program>
 
-"""     ),
-
+""",
+        ),
         (
-        r"""
+            r"""
         // Postfix
         var x = 3;
         y = x--; // y = 3, x = 2
@@ -600,7 +593,7 @@ def test_schema():
         var a = 2;
         b = --a; // a = 1, b = 1
         """,
-"""
+            """
 <program>
   <var name="x">
     <number value="3"/>
@@ -629,14 +622,14 @@ def test_schema():
     </right>
   </assign>
 </program>
-"""     ),
-
+""",
+        ),
         (
-        r"""
+            r"""
         var x = 3;
         y = -x; // y = -3, x = 3
         """,
-"""
+            """
 <program>
   <var name="x">
     <number value="3"/>
@@ -653,18 +646,17 @@ def test_schema():
   </assign>
 </program>
 
-"""
+""",
         ),
-
         (
-        r"""
+            r"""
         +3;     // 3
         +"3";   // 3
         +true;  // 1
         +false; // 0
         +null;  // 0
         """,
-"""
+            """
 <program>
   <number value="+3"/>
   <unaryoperation operation="+">
@@ -680,15 +672,14 @@ def test_schema():
     <null/>
   </unaryoperation>
 </program>
-"""
+""",
         ),
-
         # assignements
         (
-        r"""
+            r"""
         i = b;
         """,
-"""
+            """
 <program>
   <assign operator="=">
     <left>
@@ -699,13 +690,13 @@ def test_schema():
     </right>
   </assign>
 </program>
-"""
+""",
         ),
         (
-        r"""
+            r"""
         i.a = "b";
         """,
-"""
+            """
 <program>
   <assign operator="=">
     <left>
@@ -723,13 +714,13 @@ def test_schema():
     </right>
   </assign>
 </program>
-"""
+""",
         ),
         (
-        r"""
+            r"""
         i["a"] = "b";
         """,
-"""
+            """
 <program>
   <assign operator="=">
     <left>
@@ -747,13 +738,13 @@ def test_schema():
     </right>
   </assign>
 </program>
-"""
+""",
         ),
         (
-        r"""
+            r"""
         i[a] = "b";
         """,
-"""
+            """
 <program>
   <assign operator="=">
     <left>
@@ -771,16 +762,15 @@ def test_schema():
     </right>
   </assign>
 </program>
-"""
+""",
         ),
-
         # control structures
         (
-        r"""
+            r"""
         if (condition) {
             result = expression;
         }""",
-"""
+            """
 <program>
   <if>
     <predicate>
@@ -800,16 +790,16 @@ def test_schema():
     </then>
   </if>
 </program>
-"""
+""",
         ),
         (
-        r"""
+            r"""
         if (condition) {
             result = expression;
         } else {
             result = alternative;
         }""",
-"""
+            """
 <program>
   <if>
     <predicate>
@@ -841,11 +831,10 @@ def test_schema():
     </else>
   </if>
 </program>
-"""
+""",
         ),
-
         (
-        r"""
+            r"""
         if (exprA == exprB) {
            result = expression;
         } else if (expr2) {
@@ -853,7 +842,7 @@ def test_schema():
         } else {
            result = alternative2;
         }""",
-"""
+            """
 <program>
   <if>
     <predicate>
@@ -911,12 +900,11 @@ def test_schema():
     </else>
   </if>
 </program>
-"""
+""",
         ),
-
         (
-        "result = condition ? expression : alternative;",
-"""
+            "result = condition ? expression : alternative;",
+            """
 <program>
   <assign operator="=">
     <left>
@@ -937,12 +925,11 @@ def test_schema():
     </right>
   </assign>
 </program>
-"""
+""",
         ),
-
         # switch
         (
-        r"""
+            r"""
         switch (expr) {
            case SOMEVALUE:
              //statements;
@@ -955,7 +942,7 @@ def test_schema():
              break;
          }
         """,
-"""
+            """
 <program>
   <switch>
     <expression>
@@ -978,17 +965,16 @@ def test_schema():
     </default>
   </switch>
 </program>
-"""
+""",
         ),
-
         # for loop
         (
-        r"""
+            r"""
         for (var i = 0; i < 5; i++) {
             a = i;
         }
         """,
-"""
+            """
 <program>
   <for>
     <init>
@@ -1025,15 +1011,15 @@ def test_schema():
     </statement>
   </for>
 </program>
-"""
+""",
         ),
         (
-        r"""
+            r"""
         for (var i = 0; i < 5; i++) {
             a = i
         }
         """,
-"""
+            """
 <program>
   <for>
     <init>
@@ -1070,15 +1056,15 @@ def test_schema():
     </statement>
   </for>
 </program>
-"""
+""",
         ),
         (
-        r"""
+            r"""
         for (var key in array) {
             continue;
         }
         """,
-"""
+            """
 <program>
   <forin>
     <variable>
@@ -1094,15 +1080,15 @@ def test_schema():
     </statement>
   </forin>
 </program>
-"""
+""",
         ),
         (
-        r"""
+            r"""
         for (;;) {
             break;
         }
         """,
-"""
+            """
 <program>
   <for>
     <init>
@@ -1118,15 +1104,15 @@ def test_schema():
     </statement>
   </for>
 </program>
-"""
+""",
         ),
         (
-        r"""
+            r"""
         for (; i < len; i++) {
             j = i;
         }
         """,
-"""
+            """
 <program>
   <for>
     <init>
@@ -1161,15 +1147,15 @@ def test_schema():
     </statement>
   </for>
 </program>
-"""
+""",
         ),
         (
-        r"""
+            r"""
         for (var i = 0, len = cars.length, text = ""; i < len; i++) {
             text += cars[i] + "<br>";
         }
         """,
-"""
+            """
 <program>
   <for>
     <init>
@@ -1233,16 +1219,16 @@ def test_schema():
     </statement>
   </for>
 </program>
-"""
+""",
         ),
         (
-        """
+            """
         for (; i < len; ) {
             text += cars[i] + "<br>";
             i++;
         }
         """,
-"""
+            """
 <program>
   <for>
     <init>
@@ -1289,17 +1275,16 @@ def test_schema():
     </statement>
   </for>
 </program>
-"""
+""",
         ),
-
         # while loop
         (
-        """
+            """
         while (a<b) {
            a+=1;
         }
         """,
-"""
+            """
 <program>
   <while>
     <predicate>
@@ -1326,15 +1311,15 @@ def test_schema():
     </statement>
   </while>
 </program>
-"""
+""",
         ),
         (
-        """
+            """
         do {
            a+=1;
          } while (a<b);
         """,
-"""
+            """
 <program>
   <statement>
     <block>
@@ -1359,12 +1344,11 @@ def test_schema():
     </binaryoperation>
   </while>
 </program>
-"""
+""",
         ),
-
         # with
         (
-        """
+            """
         with (document) {
            var a = getElementById('a');
            var b = getElementById('b');
@@ -1372,7 +1356,7 @@ def test_schema():
            var c = document.get('c');
          };
         """,
-"""
+            """
 <program>
   <with>
     <identifier name="document"/>
@@ -1430,12 +1414,11 @@ def test_schema():
   </with>
   <empty>;</empty>
 </program>
-"""
+""",
         ),
-
         # label
         (
-        r"""
+            r"""
         loop1: for (var a = 0; a < 10; a++) {
            if (a == 4) {
                break loop1; // Stops after the 4th attempt
@@ -1458,7 +1441,7 @@ def test_schema():
             alert('world'); // Will never get here
         }
         """,
-"""
+            """
 <program>
   <label name="loop1">
     <statement>
@@ -1641,17 +1624,16 @@ def test_schema():
     </statement>
   </label>
 </program>
-"""
+""",
         ),
-
         # functions
         (
-        """
+            """
         function foo(p) {
             p = "bar";
         }
         """,
-"""
+            """
 <program>
   <funcdecl name="foo">
     <parameters>
@@ -1669,15 +1651,15 @@ def test_schema():
     </body>
   </funcdecl>
 </program>
-"""
+""",
         ),
         (
-        """
+            """
         function hello() {
             alert('world');
         }
         """,
-"""
+            """
 <program>
   <funcdecl name="hello">
     <parameters/>
@@ -1693,15 +1675,15 @@ def test_schema():
     </body>
   </funcdecl>
 </program>
-"""
+""",
         ),
         (
-        """
+            """
         var anon = function() {
             alert('I am anonymous');
         };
         """,
-"""
+            """
 <program>
   <var name="anon">
     <funcexpr>
@@ -1720,13 +1702,13 @@ def test_schema():
     </funcexpr>
   </var>
 </program>
-"""
+""",
         ),
         (
-        """
+            """
         anon();
         """,
-"""
+            """
 <program>
   <functioncall>
     <function>
@@ -1735,15 +1717,15 @@ def test_schema():
     <arguments/>
   </functioncall>
 </program>
-"""
+""",
         ),
         (
-        """
+            """
         setTimeout(function() {
             alert('hello');
         }, 1000)
         """,
-"""
+            """
 <program>
   <functioncall>
     <function>
@@ -1768,15 +1750,15 @@ def test_schema():
     </arguments>
   </functioncall>
 </program>
-"""
+""",
         ),
         (
-        """
+            """
         (function() {
             alert('foo');
         }());
         """,
-"""
+            """
 <program>
   <groupingoperator>
     <functioncall>
@@ -1800,19 +1782,18 @@ def test_schema():
     </functioncall>
   </groupingoperator>
 </program>
-"""
+""",
         ),
-
         # get/set
         (
-        """
+            """
         var obj = {
           get latest () {
             return "latest";
           }
         }
         """,
-"""
+            """
 <program>
   <var name="obj">
     <object>
@@ -1829,13 +1810,13 @@ def test_schema():
     </object>
   </var>
 </program>
-"""
+""",
         ),
         (
-        """
+            """
         delete obj.latest;
         """,
-"""
+            """
 <program>
   <unaryoperation operation="delete">
     <dotaccessor>
@@ -1848,10 +1829,10 @@ def test_schema():
     </dotaccessor>
   </unaryoperation>
 </program>
-"""
+""",
         ),
         (
-        """
+            """
         var o = {
           set current (str) {
             return this.log[this.log.length] = str;
@@ -1859,7 +1840,7 @@ def test_schema():
           log: []
         }
         """,
-"""
+            """
 <program>
   <var name="o">
     <object>
@@ -1911,9 +1892,8 @@ def test_schema():
     </object>
   </var>
 </program>
-"""
+""",
         ),
-
     ]
 
     for snippet, expected in jscode_snippets:

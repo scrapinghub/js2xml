@@ -10,6 +10,7 @@ __version__ = "0.4.0"
 _parser = Parser()
 _visitor = XmlVisitor()
 
+
 def parse(text, encoding="utf8", debug=False):
     if not isinstance(text, str):
         text = text.decode(encoding)
@@ -19,4 +20,4 @@ def parse(text, encoding="utf8", debug=False):
 
 
 def pretty_print(tree):
-    return lxml.etree.tostring(tree, pretty_print=True, encoding='unicode')
+    return lxml.etree.tostring(tree, pretty_print=True, encoding="unicode")
