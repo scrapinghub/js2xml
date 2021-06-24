@@ -1,6 +1,5 @@
 import js2xml
 from js2xml.utils.objects import findall, getall, make
-from nose.tools import *
 
 
 def test_json():
@@ -127,7 +126,7 @@ def test_json():
     ]
     for snippet, expected in jscode_snippets:
         jsxml = js2xml.parse(snippet)
-        assert_list_equal(getall(jsxml, types=[dict, list]), expected)
+        assert getall(jsxml, types=[dict, list]) == expected
 
 
 def test_findall():
@@ -159,7 +158,7 @@ def test_findall():
         results = []
         for r in js.xpath(xp):
             results.extend(findall(r, types=types))
-        assert_list_equal([make(r) for r in results], expected)
+        assert [make(r) for r in results] == expected
 
 
 def test_getall_complex():
@@ -239,4 +238,4 @@ e.src = document.location.protocol +
 
     for snippet, types, expected in jscode_snippets:
         jsxml = js2xml.parse(snippet)
-        assert_list_equal(getall(jsxml, types=types), expected)
+        assert getall(jsxml, types=types) == expected

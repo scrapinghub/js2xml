@@ -1,5 +1,6 @@
+import pytest
+
 import js2xml
-from nose.tools import *
 
 
 def test_parse():
@@ -19,7 +20,7 @@ def test_parse():
     ]
 
     for snippet in jscode_snippets:
-        assert_is_not_none(js2xml.parse(snippet))
+        assert js2xml.parse(snippet) is not None
 
 
 def test_parse_exception():
@@ -41,7 +42,8 @@ def test_parse_exception():
     ]
 
     for snippet in jscode_snippets:
-        assert_raises(SyntaxError, js2xml.parse, snippet)
+        with pytest.raises(SyntaxError):
+            js2xml.parse(snippet)
 
 
 def test_parse_string():
@@ -155,7 +157,7 @@ bar";
     for snippet, expected in jscode_snippets:
         jsxml = js2xml.parse(snippet)
         result = jsxml.xpath("//string/text()")
-        assert_list_equal(result, expected)
+        assert result == expected
 
 
 def test_parse_url():
@@ -175,7 +177,7 @@ def test_parse_url():
     for snippet, expected in jscode_snippets:
         jsxml = js2xml.parse(snippet)
         result = jsxml.xpath("//string/text()")
-        assert_list_equal(result, expected)
+        assert result == expected
 
 
 def test_parse_number():
@@ -195,7 +197,7 @@ def test_parse_number():
     for snippet, expected in jscode_snippets:
         jsxml = js2xml.parse(snippet)
         result = jsxml.xpath("//number/@value")
-        assert_list_equal(result, expected)
+        assert result == expected
 
 
 def test_parse_undefined():
@@ -219,7 +221,7 @@ def test_parse_undefined():
     for snippet, expected in jscode_snippets:
         jsxml = js2xml.parse(snippet)
         result = jsxml.xpath("count(//array/undefined)")
-        assert_equal(result, expected)
+        assert result == expected
 
 
 def test_parse_encoding():
@@ -242,7 +244,7 @@ def test_parse_encoding():
     for snippet, encoding, expected in jscode_snippets:
         jsxml = js2xml.parse(snippet, encoding=encoding)
         result = jsxml.xpath("//string/text()")
-        assert_equal(result, expected)
+        assert result == expected
 
 
 def test_keywords_as_object_keys():
@@ -316,4 +318,4 @@ def test_keywords_as_object_keys():
         jsxml = js2xml.parse('x={{{}: 0}}'.format(keyword))
         xpath = "//property[@name='{}']".format(keyword)
         matches = len(jsxml.xpath(xpath))
-        assert_equal(matches, 1)
+        assert matches == 1
