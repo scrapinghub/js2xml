@@ -1,5 +1,4 @@
 import js2xml
-from nose.tools import *
 
 
 def test_syntax():
@@ -327,4 +326,4 @@ def test_syntax():
     ]
 
     for snippet in jscode_snippets:
-        assert_is_not_none(js2xml.parse(snippet))
+        assert js2xml.parse(snippet) is not None

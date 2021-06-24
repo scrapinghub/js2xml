@@ -25,6 +25,7 @@ bits in Javascript instructions (strings, IDs, function parameters...)
         "calmjs.parse",
         "lxml",
       ],
+      python_requires='>=3.5',
       classifiers = [
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: Text Processing :: Markup :: XML',
@@ -33,6 +34,7 @@ bits in Javascript instructions (strings, IDs, function parameters...)
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
+        'Programming Language :: Python :: 3.9',
         'License :: OSI Approved :: MIT License',
         'Development Status :: 3 - Alpha',
         'Intended Audience :: Developers',
