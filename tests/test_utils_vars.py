@@ -1,8 +1,6 @@
 from js2xml import parse
 from js2xml.utils.vars import get_vars
 
-from nose.tools import assert_dict_equal
-
 
 def test_vars():
     jscode_snippets = [
@@ -137,4 +135,4 @@ def test_vars():
     ]
     for snippet, expected in jscode_snippets:
         tree = parse(snippet)
-        assert_dict_equal(get_vars(tree), expected, (snippet, expected))
+        assert get_vars(tree) == expected, (snippet, expected)

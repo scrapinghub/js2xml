@@ -1,7 +1,5 @@
 import js2xml
 
-from nose.tools import assert_equal
-
 
 def test_schema():
     jscode_snippets = [
@@ -1901,4 +1899,4 @@ def test_schema():
         print(snippet)
         js = js2xml.parse(snippet)
         output = js2xml.pretty_print(js).strip()
-        assert_equal(output, expected.strip(), "got\n%s\nexpected:\n%s" % (output, expected))
+        assert output == expected.strip(), "got\n%s\nexpected:\n%s" % (output, expected)

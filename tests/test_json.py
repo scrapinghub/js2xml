@@ -1,8 +1,6 @@
 import js2xml
 import js2xml.jsonlike
 
-from nose.tools import assert_list_equal
-
 
 def test_json():
     jscode_snippets = [
@@ -122,7 +120,7 @@ def test_json():
     ]
     for snippet, expected in jscode_snippets:
         jsxml = js2xml.parse(snippet)
-        assert_list_equal(js2xml.jsonlike.getall(jsxml), expected)
+        assert js2xml.jsonlike.getall(jsxml) == expected
 
 
 def test_findall():
@@ -150,7 +148,7 @@ def test_findall():
         results = []
         for r in js.xpath(xp):
             results.extend(js2xml.jsonlike.findall(r))
-        assert_list_equal([js2xml.jsonlike.make_dict(r) for r in results], expected)
+        assert [js2xml.jsonlike.make_dict(r) for r in results] == expected
 
 
 def test_getall_complex():
@@ -179,4 +177,4 @@ e.src = document.location.protocol +
 
     for snippet, expected in jscode_snippets:
         jsxml = js2xml.parse(snippet)
-        assert_list_equal(js2xml.jsonlike.getall(jsxml), expected)
+        assert js2xml.jsonlike.getall(jsxml) == expected
