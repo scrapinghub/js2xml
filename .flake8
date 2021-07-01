@@ -1,0 +1,14 @@
+[flake8]
+max-line-length = 99
+ignore = W503
+exclude =
+    .git
+    .tox
+    venv*
+
+    tests/test_parse.py E501
+
+    # pending revision
+    js2xml/__init__.py F403
+    js2xml/__init__.py F401
+    js2xml/jsonlike.py F401

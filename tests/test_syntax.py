@@ -3,7 +3,6 @@ import js2xml
 
 def test_syntax():
     jscode_snippets = [
-
         # strings
         r"""
         "test";
@@ -12,14 +11,12 @@ def test_syntax():
         "test\
         multiline";
         """,
-
         # numbers
         "3.14;",
         "-12;",
         "3.45e2;",
         "0377;",
         "0xFF;"
-
         # arrays
         "[]",
         "[1,2]",
@@ -27,7 +24,6 @@ def test_syntax():
         "[1,,2,,3,]",
         "['a', 'b','c']",
         "[a, 'b', c]",
-
         # objects
         "o = {};",
         "o = {a: 1};",
@@ -37,13 +33,11 @@ def test_syntax():
         'o = {"c": 1, d: "e"};',
         "e = {foo: 5, bar: 6, baz: ['Baz', 'Content']};",
         "e = {1: a, 2: b};",
-
         # other primitive data types
         "null;",
         "undefined;",
         "true;",
         "false;",
-
         # variables
         r"""
         var i;
@@ -69,7 +63,6 @@ def test_syntax():
         """,
         r"""var testObj = {};""",
         r"""var testObj = [];""",
-
         # assignements
         r"""
         i = b;
@@ -83,7 +76,6 @@ def test_syntax():
         r"""
         i[a] = "b";
         """,
-
         # control structures
         r"""
         if (condition) {
@@ -95,7 +87,6 @@ def test_syntax():
         } else {
             result = alternative;
         };""",
-
         r"""
         if (exprA == exprB) {
            result = expression;
@@ -104,9 +95,7 @@ def test_syntax():
         } else {
            result = alternative2;
         };""",
-
         "result = condition ? expression : alternative;",
-
         # switch
         r"""
         switch (expr) {
@@ -121,7 +110,6 @@ def test_syntax():
              break;
          }
         """
-
         # for loop
         r"""
         for (var i = 0; i < 5; i++) {
@@ -159,7 +147,6 @@ def test_syntax():
             i++;
         }
         """,
-
         # while loop
         """
         while (a<b) {
@@ -171,7 +158,6 @@ def test_syntax():
            a+=1;
          } while (a<b);
         """,
-
         # with
         """
         with (document) {
@@ -180,7 +166,6 @@ def test_syntax():
            var c = getElementById('c');
          };
         """,
-
         # label
         r"""
         loop1: for (var a = 0; a < 10; a++) {
@@ -205,7 +190,6 @@ def test_syntax():
             alert('world'); // Will never get here
         }
         """,
-
         # functions
         """
         function foo(p) {
@@ -249,7 +233,6 @@ def test_syntax():
             alert('foo');
         }());
         """,
-
         # get/set
         """
         var obj = {
@@ -269,10 +252,8 @@ def test_syntax():
           log: []
         }
         """,
-
         # new
         """var mycar = new car("Eagle", "Talon TSi", 1993);""",
-
         # try / catch
         """
         try {
@@ -283,7 +264,6 @@ def test_syntax():
            logMyErrors(e); // pass exception object to error handler
         }
         """,
-
         """
         try {
             addalert("bad call");

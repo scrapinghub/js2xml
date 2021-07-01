@@ -16,7 +16,7 @@ def test_parse():
         var t2 = 'nested \'quote\'.';
         var t3 = 'nested \"quote\".';
         var t2 = "nested \'quote\'.";
-        """
+        """,
     ]
 
     for snippet in jscode_snippets:
@@ -49,7 +49,7 @@ def test_parse_exception():
 def test_parse_string():
     jscode_snippets = [
         (
-        r"""
+            r"""
         var h = 'test';
         var i = "test";
         var j = "";
@@ -58,65 +58,75 @@ def test_parse_string():
         var m = '';
         var n = "''";
         var o = "'";
-        """, ['test', 'test', '', '""', '"', '', "''", "'"]
+        """,
+            ["test", "test", "", '""', '"', "", "''", "'"],
         ),
         (
-        r"""
+            r"""
         var i = 'test\'s output';
-        """, [r"test's output"]
+        """,
+            [r"test's output"],
         ),
         (
-        r"""
+            r"""
         var i = 'test\
  multiline';
-        """, [r"test multiline"]
+        """,
+            [r"test multiline"],
         ),
         (
-        r"""
+            r"""
         var i = 'test\
  long \
  multiline';
-        """, [r"test long  multiline"]
+        """,
+            [r"test long  multiline"],
         ),
-
         (
-        r"""
+            r"""
         var i = ["\"", '\''];
         var j = "test\'s output";
         var k = "test\\'s output";
         var l = "nested \"quotes\".";
-        """, ['"', "'", r"test's output", r"test\'s output", r'nested "quotes".']
+        """,
+            ['"', "'", r"test's output", r"test\'s output", r'nested "quotes".'],
         ),
         (
-        r"""
+            r"""
         var i = 'https://www.blogger.com/navbar.g?targetBlogID\0754325487278375417853\46blogName\75spirello\46publishMode\75PUBLISH_MODE_BLOGSPOT\46navbarType\75LIGHT\46layoutType\75LAYOUTS\46searchRoot\75http://spirelloskrimskramserier.blogspot.com/search\46blogLocale\75no\46v\0752\46homepageUrl\75http://spirelloskrimskramserier.blogspot.com/\46vt\0751357383140196484672';
-        """, [r'https://www.blogger.com/navbar.g?targetBlogID=4325487278375417853&blogName=spirello&publishMode=PUBLISH_MODE_BLOGSPOT&navbarType=LIGHT&layoutType=LAYOUTS&searchRoot=http://spirelloskrimskramserier.blogspot.com/search&blogLocale=no&v=2&homepageUrl=http://spirelloskrimskramserier.blogspot.com/&vt=1357383140196484672']
+        """,
+            [
+                r"https://www.blogger.com/navbar.g?targetBlogID=4325487278375417853&blogName=spirello&publishMode=PUBLISH_MODE_BLOGSPOT&navbarType=LIGHT&layoutType=LAYOUTS&searchRoot=http://spirelloskrimskramserier.blogspot.com/search&blogLocale=no&v=2&homepageUrl=http://spirelloskrimskramserier.blogspot.com/&vt=1357383140196484672"
+            ],
         ),
         (
-        r"""
+            r"""
         var i = "foo \
 bar";
         var j = "foo \
                  bar";
-        """, [r'foo bar', 'foo                  bar']
+        """,
+            [r"foo bar", "foo                  bar"],
         ),
         (
-        # testing Unicode literals
-        b"""
+            # testing Unicode literals
+            b"""
         var x = "\\u00A9 Netscape Communications 1";
         """,
-        [u'\u00a9 Netscape Communications 1']
+            [u"\u00a9 Netscape Communications 1"],
         ),
         (
-        # testing Unicode characters
-        u"""
+            # testing Unicode characters
+            u"""
         var x = "\u00A9 Netscape Communications 2";
-        """.encode("utf8"),
-        [u'\u00a9 Netscape Communications 2']
+        """.encode(
+                "utf8"
+            ),
+            [u"\u00a9 Netscape Communications 2"],
         ),
         # a real example
         (
-        r"""
+            r"""
         var needleParam = needleParam || {};
         needleParam.chatGroup = "test";
         needleParam.productId = "6341292";
@@ -133,25 +143,29 @@ bar";
         });
         // End Needle snippet
         """,
-        ['test',
-         '6341292',
-         'EUR              138.53',
-         '$',
-         'n_',
-         '',
-         'script',
-         'text/javascript',
-         '//overstock.needle.com/needle_service.js?1']
+            [
+                "test",
+                "6341292",
+                "EUR              138.53",
+                "$",
+                "n_",
+                "",
+                "script",
+                "text/javascript",
+                "//overstock.needle.com/needle_service.js?1",
+            ],
         ),
         # test replacing some control characters
         (
-        r"""
+            r"""
         var name = "\u13e9\u0352\u0362\u044f\u2778\u00b3\u1d43\u034e\u034e\u0442\u035b\u13b7\u0362\u033b\u1d51A\u0362\u13de\u0001\u0001\u277c00b";
         """,
-        [u'\u13e9\u0352\u0362\u044f\u2778\xb3\u1d43\u034e\u034e\u0442\u035b\u13b7\u0362\u033b\u1d51A\u0362\u13de\ufffd\ufffd\u277c00b']
+            [
+                u"\u13e9\u0352\u0362\u044f\u2778\xb3\u1d43\u034e\u034e\u0442\u035b\u13b7\u0362\u033b\u1d51A\u0362\u13de\ufffd\ufffd\u277c00b"
+            ],
         ),
         # surrogate pairs
-        (r'''var name = "\ud835\udebd"''', [u'\U0001d6bd']),
+        (r'''var name = "\ud835\udebd"''', [u"\U0001d6bd"]),
     ]
 
     for snippet, expected in jscode_snippets:
@@ -163,14 +177,16 @@ bar";
 def test_parse_url():
     jscode_snippets = [
         (
-        r"""
+            r"""
         var i = 'http://www.example.com';
-        """, [r'http://www.example.com']
+        """,
+            [r"http://www.example.com"],
         ),
         (
-        r"""
+            r"""
         var i = 'http:\/\/www.example.com';
-        """, [r"http://www.example.com"]
+        """,
+            [r"http://www.example.com"],
         ),
     ]
 
@@ -183,14 +199,16 @@ def test_parse_url():
 def test_parse_number():
     jscode_snippets = [
         (
-        r"""
+            r"""
         var i = 3;
-        """, [r'3']
+        """,
+            [r"3"],
         ),
         (
-        r"""
+            r"""
         var i = -3.14;
-        """, [r"-3.14"]
+        """,
+            [r"-3.14"],
         ),
     ]
 
@@ -203,18 +221,22 @@ def test_parse_number():
 def test_parse_undefined():
     jscode_snippets = [
         (
-        r"""
+            r"""
         myArray = [0,1,,,4,5];
-        """, 2
+        """,
+            2,
         ),
         (
-        r"""
+            r"""
         myArray = [,1,,,4,];
-        """, 3 # and not 4
+        """,
+            3,  # and not 4
         ),
-        (r"""
+        (
+            r"""
         myArray = [,1,,,4,,,];
-        """, 5
+        """,
+            5,
         ),
     ]
 
@@ -227,17 +249,21 @@ def test_parse_undefined():
 def test_parse_encoding():
 
     jscode_snippets = [
-        (u"""
+        (
+            u"""
         var test = "Daniel Gra\xf1a";
         """,
-        None,
-        [u"Daniel Gra\xf1a"]
+            None,
+            [u"Daniel Gra\xf1a"],
         ),
-        (u"""
+        (
+            u"""
         var test = "Daniel Gra\xf1a";
-        """.encode("latin1"),
-        "latin1",
-        [u"Daniel Gra\xf1a"]
+        """.encode(
+                "latin1"
+            ),
+            "latin1",
+            [u"Daniel Gra\xf1a"],
         ),
     ]
 
@@ -250,72 +276,72 @@ def test_parse_encoding():
 def test_keywords_as_object_keys():
     # https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Lexical_grammar#Keywords
     keywords = [
-        'abstract',
-        'arguments',
-        'await',
-        'boolean',
-        'break',
-        'byte',
-        'catch',
-        'char',
-        'class',
-        'const',
-        'continue',
-        'debugger',
-        'default',
-        'delete',
-        'do',
-        'double',
-        'else',
-        'enum',
-        'eval',
-        'export',
-        'extends',
-        'false',
-        'final',
-        'finally',
-        'float',
-        'for',
-        'function',
-        'goto',
-        'if',
-        'implements',
-        'import',
-        'in',
-        'instanceof',
-        'int',
-        'interface',
-        'let',
-        'long',
-        'native',
-        'new',
-        'null',
-        'package',
-        'private',
-        'protected',
-        'public',
-        'return',
-        'short',
-        'static',
-        'super',
-        'switch',
-        'synchronized',
-        'this',
-        'throw',
-        'throws',
-        'transient',
-        'true',
-        'try',
-        'typeof',
-        'var',
-        'void',
-        'volatile',
-        'while',
-        'with',
-        'yield',
+        "abstract",
+        "arguments",
+        "await",
+        "boolean",
+        "break",
+        "byte",
+        "catch",
+        "char",
+        "class",
+        "const",
+        "continue",
+        "debugger",
+        "default",
+        "delete",
+        "do",
+        "double",
+        "else",
+        "enum",
+        "eval",
+        "export",
+        "extends",
+        "false",
+        "final",
+        "finally",
+        "float",
+        "for",
+        "function",
+        "goto",
+        "if",
+        "implements",
+        "import",
+        "in",
+        "instanceof",
+        "int",
+        "interface",
+        "let",
+        "long",
+        "native",
+        "new",
+        "null",
+        "package",
+        "private",
+        "protected",
+        "public",
+        "return",
+        "short",
+        "static",
+        "super",
+        "switch",
+        "synchronized",
+        "this",
+        "throw",
+        "throws",
+        "transient",
+        "true",
+        "try",
+        "typeof",
+        "var",
+        "void",
+        "volatile",
+        "while",
+        "with",
+        "yield",
     ]
     for keyword in keywords:
-        jsxml = js2xml.parse('x={{{}: 0}}'.format(keyword))
+        jsxml = js2xml.parse("x={{{}: 0}}".format(keyword))
         xpath = "//property[@name='{}']".format(keyword)
         matches = len(jsxml.xpath(xpath))
         assert matches == 1
